@@ -38,7 +38,7 @@ jobs:
           working-directory: services/fraud
           enable-cache: true
       - run: pnpm install --frozen-lockfile
-      - run: pnpm turbo run lint lint:root typecheck test
+      - run: pnpm turbo run lint lint:root typecheck test --continue
 
   contracts:
     name: Contracts drift check
