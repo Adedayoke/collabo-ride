@@ -12,6 +12,12 @@
         }
       }
     ],
-    "collabo/no-untranslated-call": "error"
+    "collabo/no-untranslated-call": "error",
+    "react/style-prop-object": [
+      "error",
+      {
+        "allow": ["StatusBar"]
+      }
+    ]
   }
 }

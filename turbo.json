@@ -53,6 +53,11 @@
     },
     "//#format:root": {
       "cache": false
+    },
+    "@collabo/console#dev": {
+      "dependsOn": ["@collabo/ui#build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

@@ -1,7 +1,11 @@
 {
   "extends": "@collabo/config/tsconfig.node.json",
   "compilerOptions": {
-    "allowImportingTsExtensions": true
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "customConditions": ["react-native"],
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true
   },
-  "include": ["tokens"]
+  "include": ["tokens", "native", "web"]
 }

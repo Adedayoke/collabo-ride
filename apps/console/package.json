@@ -12,7 +12,10 @@
     "format": "oxlint --fix && oxfmt"
   },
   "dependencies": {
+    "@collabo/i18n": "workspace:*",
+    "@collabo/ui": "workspace:*",
     "@tanstack/react-router": "1.170.44",
+    "lucide-react": "1.57.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

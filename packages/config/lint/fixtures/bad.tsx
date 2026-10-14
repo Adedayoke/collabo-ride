@@ -19,8 +19,8 @@ export function Bad() {
       <View accessibilityLabel="Close" /> {/* expect: i18next/no-literal-string */}
       <View accessibilityHint="Opens the menu" /> {/* expect: i18next/no-literal-string */}
       <Stack.Screen name="home" options={{ title: 'Home' }} /> {/* expect: collabo/no-untranslated-call */}
-      <Stack.Screen name="trip" options={() => ({ tabBarLabel: `Trips` })} />{' '}
       {/* expect: collabo/no-untranslated-call */}
+      <Stack.Screen name="trip" options={() => ({ tabBarLabel: `Trips` })} />
       <View accessibilityValue={{ text: 'Half full' }} /> {/* expect: collabo/no-untranslated-call */}
       <input placeholder="Search" /> {/* expect: i18next/no-literal-string */}
       <img alt="Tunde smiling" src="x.png" /> {/* expect: i18next/no-literal-string */}

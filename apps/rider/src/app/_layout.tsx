@@ -1,18 +1,18 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router'
+import { AppRoot } from '@collabo/ui/native'
+import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useColorScheme } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon'
-import { AppTabs } from '@/components/app-tabs'
+// Held until fonts and the saved color mode are in, so the first frame is never the wrong mode.
+void SplashScreen.preventAutoHideAsync()
 
-SplashScreen.preventAutoHideAsync()
+const devUi = process.env.EXPO_PUBLIC_DEV_UI === 'true'
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme()
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <AppRoot surface="rider" devUi={devUi}>
+      <StatusBar style="auto" />
+      <Stack screenOptions={{ headerShown: false }} />
+    </AppRoot>
   )
 }

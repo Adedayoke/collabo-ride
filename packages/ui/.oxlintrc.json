@@ -8,6 +8,13 @@
         "i18next/no-literal-string": "off",
         "collabo/no-untranslated-call": "off"
       }
+    },
+    {
+      "files": ["native/catalog/**", "web/catalog/**"],
+      "rules": {
+        "i18next/no-literal-string": "off",
+        "collabo/no-untranslated-call": "off"
+      }
     }
   ]
 }

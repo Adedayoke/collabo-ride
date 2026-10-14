@@ -1,11 +1,25 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
-  "extends": ["../../packages/config/oxlint.react.json"],
+  "extends": ["../../packages/config/oxlint.ui.json"],
   "overrides": [
     {
       "files": ["src/routes/**"],
       "rules": {
         "react/only-export-components": "off"
+      }
+    },
+    {
+      "files": ["src/routes/dev/**"],
+      "rules": {
+        "i18next/no-literal-string": "off",
+        "collabo/no-untranslated-call": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "i18next/no-literal-string": "off",
+        "collabo/no-untranslated-call": "off"
       }
     }
   ]

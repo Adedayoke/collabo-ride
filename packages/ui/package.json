@@ -5,6 +5,10 @@
   "type": "module",
   "exports": {
     "./tokens": "./tokens/index.ts",
+    "./native": "./native/index.ts",
+    "./native/catalog": "./native/catalog/index.ts",
+    "./web": "./web/index.ts",
+    "./web/catalog": "./web/catalog/index.ts",
     "./tokens.css": "./dist/tokens.css"
   },
   "scripts": {
@@ -18,11 +22,52 @@
   },
   "devDependencies": {
     "@collabo/config": "workspace:*",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@shopify/react-native-skia": "2.6.2",
     "@types/fontkit": "2.0.9",
     "@types/node": "26.6.5",
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "^19.2.7",
+    "expo-font": "~57.0.4",
+    "expo-haptics": "~57.0.3",
+    "expo-localization": "~57.0.2",
+    "expo-router": "~57.0.26",
+    "expo-splash-screen": "~57.0.10",
     "fontkit": "2.0.4",
+    "lucide-react": "1.57.0",
+    "lucide-react-native": "1.57.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-maps": "1.27.2",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
     "typescript": "~6.0.3",
     "vitest": "5.0.4",
-    "wawoff2": "2.0.1"
+    "wawoff2": "2.0.1",
+    "zustand": "5.0.15"
+  },
+  "dependencies": {
+    "@collabo/i18n": "workspace:*"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@shopify/react-native-skia": "2.6.2",
+    "expo-font": "~57.0.4",
+    "expo-haptics": "~57.0.3",
+    "expo-localization": "~57.0.2",
+    "expo-router": "~57.0.26",
+    "expo-splash-screen": "~57.0.10",
+    "lucide-react": "1.57.0",
+    "lucide-react-native": "1.57.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-maps": "1.27.2",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
+    "zustand": "5.0.15"
   }
 }
