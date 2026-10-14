@@ -1,0 +1,58 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds and caches
+dist/
+build/
+.turbo/
+.expo/
+web-build/
+*.tsbuildinfo
+coverage/
+
+# expo native folders (dev builds are generated with prebuild)
+apps/rider/ios/
+apps/rider/android/
+apps/driver/ios/
+apps/driver/android/
+
+# go
+services/dispatch/bin/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# env and secrets
+.env
+.env.*
+!.env.example
+
+# local infra data
+infra/osrm/data/
+
+# os and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# planning docs (kept local, not published)
+/docs/
+/0*-*.md
+/prd.md
+/project-summary.md
+/schema.md
+/system-design*.md
+/capacity-estimation.md
+/api-spec*.yaml
+
+# agent skills and local agent settings
+.claude/
+/.agents/
+/skills-lock.json
