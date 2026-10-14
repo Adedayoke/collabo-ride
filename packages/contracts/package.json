@@ -10,7 +10,9 @@
   },
   "scripts": {
     "gen": "node scripts/gen.mjs",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "format": "oxlint --fix && oxfmt"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5"

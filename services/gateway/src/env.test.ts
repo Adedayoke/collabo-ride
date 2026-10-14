@@ -39,7 +39,21 @@ describe('gateway env', () => {
     expect(env).toMatchObject({ SERVICE_NAME: 'gateway', PORT: 8080 })
   })
 
-  it.each(['VALKEY_LIVE_URL', 'JWKS_URL', 'JWT_ISSUER', 'JWT_AUDIENCE', 'ACCOUNTS_URL', 'TRIP_URL', 'DISPATCH_URL', 'PAYMENTS_URL', 'NOTIFICATIONS_URL', 'FRAUD_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])('exits at start and names %s when it is missing', async (name) => {
+  it.each([
+    'VALKEY_LIVE_URL',
+    'JWKS_URL',
+    'JWT_ISSUER',
+    'JWT_AUDIENCE',
+    'ACCOUNTS_URL',
+    'TRIP_URL',
+    'DISPATCH_URL',
+    'PAYMENTS_URL',
+    'NOTIFICATIONS_URL',
+    'FRAUD_URL',
+    'SERVICE_NAME',
+    'PORT',
+    'GATEWAY_CONTEXT_KEY',
+  ])('exits at start and names %s when it is missing', async (name) => {
     stub({ ...required, [name]: undefined })
     await expect(import('./env')).rejects.toThrow('process.exit(1)')
     expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))

@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "preview": "vite preview",
+    "format": "oxlint --fix && oxfmt"
   },
   "dependencies": {
     "@tanstack/react-router": "1.170.44",
@@ -16,13 +17,12 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@tanstack/router-plugin": "1.168.45",
     "@types/node": "^26.6.5",
     "@types/react": "~19.2.2",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
-    "oxlint": "^1.81.0",
     "typescript": "~6.0.3",
-    "vite": "^8.3.0",
-    "@tanstack/router-plugin": "1.168.45"
+    "vite": "^8.3.0"
   }
 }

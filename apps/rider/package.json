@@ -40,7 +40,8 @@
     "typecheck": "tsc --noEmit",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "lint": "expo lint"
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "format": "oxlint --fix && oxfmt"
   },
   "private": true
 }

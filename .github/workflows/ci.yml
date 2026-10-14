@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  LEFTHOOK: 0
+
+jobs:
+  checks:
+    name: Lint, typecheck, test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: services/dispatch/go.mod
+          cache-dependency-path: |
+            services/dispatch/go.sum
+            services/dispatch/tools/golangci-lint.sum
+      - uses: astral-sh/setup-uv@v10
+        with:
+          working-directory: services/fraud
+          enable-cache: true
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo run lint lint:root typecheck test
+
+  contracts:
+    name: Contracts drift check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: services/dispatch/go.mod
+          cache-dependency-path: services/dispatch/go.sum
+      - uses: astral-sh/setup-uv@v10
+        with:
+          working-directory: services/fraud
+          enable-cache: true
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm contracts:gen
+      - name: Fail when generated code differs from the OpenAPI source
+        run: |
+          if [ -n "$(git status --porcelain -- packages/contracts services/dispatch/internal/contract services/fraud/app/contract)" ]; then
+            git status --short
+            git diff
+            echo "::error::Generated contract code is stale. Run 'pnpm contracts:gen' and commit the result."
+            exit 1
+          fi

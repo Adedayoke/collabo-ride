@@ -58,8 +58,7 @@ describe('signed context', () => {
 
 describe('verifyContext rejects malformed headers', () => {
   const v = vectors.valid[0]!
-  const reject = (headers: Record<string, string | string[] | undefined>) =>
-    verifyContext(headers, vectors.key, v.ts)
+  const reject = (headers: Record<string, string | string[] | undefined>) => verifyContext(headers, vectors.key, v.ts)
 
   it.each(['x-user-id', 'x-user-role', 'x-phone-verified', 'x-request-id', 'x-ctx-ts', 'x-ctx-sig'])(
     'reports missing context headers when %s is absent',
@@ -77,7 +76,10 @@ describe('verifyContext rejects malformed headers', () => {
   })
 
   it.each(['TRUE', '1', 'yes'])('rejects the phone verified flag %s', (flag) => {
-    expect(reject({ ...toHeaders(v), 'x-phone-verified': flag })).toEqual({ ok: false, reason: 'bad phone verified flag' })
+    expect(reject({ ...toHeaders(v), 'x-phone-verified': flag })).toEqual({
+      ok: false,
+      reason: 'bad phone verified flag',
+    })
   })
 
   it.each(['-1760400000', '1760400000.5', '1e9', ' 1760400000'])('rejects the timestamp %j', (ts) => {

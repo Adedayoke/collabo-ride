@@ -14,7 +14,13 @@ x-service: &service
     valkey-live: { condition: service_healthy }
     valkey-durable: { condition: service_healthy }
   healthcheck:
-    test: ["CMD", "node", "-e", "fetch('http://localhost:'+process.env.PORT+'/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+    test:
+      [
+        'CMD',
+        'node',
+        '-e',
+        "fetch('http://localhost:'+process.env.PORT+'/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+      ]
     interval: 10s
     timeout: 3s
     retries: 3
@@ -45,12 +51,12 @@ services:
       PAYMENTS_DB_PASSWORD: ${PAYMENTS_DB_PASSWORD:?}
       NOTIFICATIONS_DB_PASSWORD: ${NOTIFICATIONS_DB_PASSWORD:?}
       FRAUD_DB_PASSWORD: ${FRAUD_DB_PASSWORD:?}
-    ports: ["5432:5432"]
+    ports: ['5432:5432']
     volumes:
       - postgres-data:/var/lib/postgresql
       - ./postgres-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 5s
       timeout: 3s
       retries: 5
@@ -67,9 +73,9 @@ services:
       --maxmemory 256mb --maxmemory-policy volatile-lru --save "" --appendonly no
     environment:
       VALKEYCLI_AUTH: ${VALKEY_LIVE_PASSWORD}
-    ports: ["6379:6379"]
+    ports: ['6379:6379']
     healthcheck:
-      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      test: ['CMD-SHELL', 'valkey-cli ping | grep -q PONG']
       interval: 5s
       timeout: 3s
       retries: 5
@@ -84,11 +90,11 @@ services:
       --maxmemory 512mb --maxmemory-policy noeviction --appendonly yes --appendfsync everysec
     environment:
       VALKEYCLI_AUTH: ${VALKEY_DURABLE_PASSWORD}
-    ports: ["6380:6379"]
+    ports: ['6380:6379']
     volumes:
       - valkey-durable-data:/data
     healthcheck:
-      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      test: ['CMD-SHELL', 'valkey-cli ping | grep -q PONG']
       interval: 5s
       timeout: 3s
       retries: 5
@@ -99,11 +105,11 @@ services:
     image: chainguard/minio@sha256:2136d593beacf4461187035eca949fe49abd589d5079735025c711ca58fee0c8
     profiles: [infra, full]
     restart: unless-stopped
-    command: ["server", "/data", "--console-address", ":9001"]
+    command: ['server', '/data', '--console-address', ':9001']
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:?}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?}
-    ports: ["9000:9000", "9001:9001"]
+    ports: ['9000:9000', '9001:9001']
     volumes:
       - minio-data:/data
 
@@ -111,8 +117,8 @@ services:
     image: ghcr.io/project-osrm/osrm-backend:v6.0.0
     profiles: [routing]
     restart: unless-stopped
-    command: ["osrm-routed", "--algorithm", "mld", "/data/nigeria-latest.osrm"]
-    ports: ["5000:5000"]
+    command: ['osrm-routed', '--algorithm', 'mld', '/data/nigeria-latest.osrm']
+    ports: ['5000:5000']
     volumes:
       - ../osrm/data:/data:ro
 
@@ -188,7 +194,7 @@ services:
     build: { context: ../.., dockerfile: services/dispatch/Dockerfile }
     healthcheck:
       # Distroless image has no shell or curl: the binary checks its own health route.
-      test: ["CMD", "/dispatch", "healthcheck"]
+      test: ['CMD', '/dispatch', 'healthcheck']
       interval: 10s
       timeout: 3s
       retries: 3
@@ -204,7 +210,13 @@ services:
     <<: *service
     build: { context: ../.., dockerfile: services/fraud/Dockerfile }
     healthcheck:
-      test: ["CMD", "python", "-c", "import os,urllib.request;urllib.request.urlopen('http://localhost:'+os.environ['PORT']+'/health',timeout=2)"]
+      test:
+        [
+          'CMD',
+          'python',
+          '-c',
+          "import os,urllib.request;urllib.request.urlopen('http://localhost:'+os.environ['PORT']+'/health',timeout=2)",
+        ]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -222,7 +234,7 @@ services:
     build: { context: ../.., dockerfile: infra/caddy/Dockerfile }
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS:-:80}
-    ports: ["${HTTP_PORT:-8000}:80", "443:443"]
+    ports: ['${HTTP_PORT:-8000}:80', '443:443']
     volumes:
       - caddy-data:/data
     depends_on:

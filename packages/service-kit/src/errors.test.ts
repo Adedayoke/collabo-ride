@@ -34,7 +34,13 @@ describe('AppError', () => {
   it('carries status, code, message, and an optional retryAfter', () => {
     const err = new AppError(429, 'RATE_LIMITED', 'Slow down', 5)
     expect(err).toBeInstanceOf(Error)
-    expect(err).toMatchObject({ name: 'AppError', status: 429, code: 'RATE_LIMITED', message: 'Slow down', retryAfter: 5 })
+    expect(err).toMatchObject({
+      name: 'AppError',
+      status: 429,
+      code: 'RATE_LIMITED',
+      message: 'Slow down',
+      retryAfter: 5,
+    })
   })
 })
 

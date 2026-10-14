@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../packages/config/oxlint.react.json"],
+  "overrides": [
+    {
+      "files": ["src/app/**"],
+      "rules": {
+        "import/no-default-export": "off",
+        "react/only-export-components": "off"
+      }
+    }
+  ]
+}

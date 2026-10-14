@@ -8,7 +8,9 @@
     "start": "node dist/index.js",
     "build": "tsup",
     "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "format": "oxlint --fix && oxfmt"
   },
   "dependencies": {
     "@collabo/service-kit": "workspace:*",

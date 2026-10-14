@@ -2,8 +2,20 @@
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "stream",
   "globalPassThroughEnv": [
-    "PATH", "HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "SYSTEMROOT", "TEMP", "TMP",
-    "GOPATH", "GOCACHE", "GOMODCACHE", "GOFLAGS", "UV_CACHE_DIR", "UV_PYTHON"
+    "PATH",
+    "HOME",
+    "USERPROFILE",
+    "APPDATA",
+    "LOCALAPPDATA",
+    "SYSTEMROOT",
+    "TEMP",
+    "TMP",
+    "GOPATH",
+    "GOCACHE",
+    "GOMODCACHE",
+    "GOFLAGS",
+    "UV_CACHE_DIR",
+    "UV_PYTHON"
   ],
   "tasks": {
     "build": {
@@ -23,6 +35,18 @@
       "persistent": true
     },
     "db:migrate": {
+      "cache": false
+    },
+    "lint": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxfmtrc.json", "$TURBO_ROOT$/packages/config/oxlint*.json"]
+    },
+    "//#lint:root": {
+      "inputs": ["$TURBO_DEFAULT$", "!apps/**", "!services/**", "!packages/**"]
+    },
+    "format": {
+      "cache": false
+    },
+    "//#format:root": {
       "cache": false
     }
   }

@@ -3,11 +3,7 @@ name = "fraud"
 version = "0.1.0"
 description = "Collabo Ride fraud service: Collabo match scoring and fraud flags."
 requires-python = ">=3.14"
-dependencies = [
-    "fastapi==0.143.0",
-    "pydantic-settings==2.15.0",
-    "uvicorn[standard]==0.54.0",
-]
+dependencies = ["fastapi==0.143.0", "pydantic-settings==2.15.0", "uvicorn[standard]==0.54.0"]
 
 [tool.uv]
 package = false
@@ -21,4 +17,16 @@ dev = [
     "datamodel-code-generator==0.83.0",
     "httpx>=0.28.1",
     "pytest>=9.1.1",
+    "ruff==0.17.0",
 ]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 120
+extend-exclude = ["app/contract"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "ANN", "N", "S", "PT"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]

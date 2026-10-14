@@ -43,12 +43,12 @@ func New(serviceName, contextKey string, routes func(mux *http.ServeMux)) http.H
 	if routes != nil {
 		routes(protected)
 	}
-	protected.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	protected.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
 		WriteError(w, http.StatusNotFound, "NOT_FOUND", "Route not found")
 	})
 
 	root := http.NewServeMux()
-	root.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+	root.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
 		WriteJSON(w, http.StatusOK, map[string]string{"status": "ok", "service": serviceName})
 	})
 	root.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

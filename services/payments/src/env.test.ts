@@ -31,9 +31,12 @@ describe('payments env', () => {
     expect(env).toMatchObject({ SERVICE_NAME: 'payments', PORT: 8084 })
   })
 
-  it.each(['DATABASE_URL', 'VALKEY_DURABLE_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])('exits at start and names %s when it is missing', async (name) => {
-    stub({ ...required, [name]: undefined })
-    await expect(import('./env')).rejects.toThrow('process.exit(1)')
-    expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))
-  })
+  it.each(['DATABASE_URL', 'VALKEY_DURABLE_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])(
+    'exits at start and names %s when it is missing',
+    async (name) => {
+      stub({ ...required, [name]: undefined })
+      await expect(import('./env')).rejects.toThrow('process.exit(1)')
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))
+    },
+  )
 })

@@ -1,0 +1,36 @@
+version: '2'
+
+run:
+  timeout: 3m
+
+linters:
+  default: standard
+  enable:
+    - bodyclose
+    - errorlint
+    - gosec
+    - misspell
+    - noctx
+    - revive
+    - unconvert
+    - wrapcheck
+  settings:
+    revive:
+      rules:
+        # Doc comments on every exported name in internal packages add noise, not safety.
+        - name: exported
+          disabled: true
+  exclusions:
+    generated: lax
+    presets:
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - gosec
+          - wrapcheck
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

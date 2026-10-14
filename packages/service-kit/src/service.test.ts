@@ -3,6 +3,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { contextHeaders } from './context'
 import { createService } from './service'
 
+const now = () => Math.floor(Date.now() / 1000)
+
 const env = {
   NODE_ENV: 'test' as const,
   SERVICE_NAME: 'kit-test',
@@ -10,6 +12,12 @@ const env = {
   LOG_LEVEL: 'error' as const,
   GATEWAY_CONTEXT_KEY: 'test-gateway-context-key-0123456789abcdef',
 }
+
+const signed = (requestId = 'req-1') =>
+  contextHeaders(
+    { userId: 'usr_1', role: 'rider', phoneVerified: true, requestId, timestamp: now() },
+    env.GATEWAY_CONTEXT_KEY,
+  )
 
 const app = createService({
   env,
@@ -39,7 +47,13 @@ describe('createService', () => {
 
   it('accepts a valid signed context and keeps the request id', async () => {
     const headers = contextHeaders(
-      { userId: 'usr_1', role: 'rider', phoneVerified: true, requestId: 'req-abc', timestamp: Math.floor(Date.now() / 1000) },
+      {
+        userId: 'usr_1',
+        role: 'rider',
+        phoneVerified: true,
+        requestId: 'req-abc',
+        timestamp: Math.floor(Date.now() / 1000),
+      },
       env.GATEWAY_CONTEXT_KEY,
     )
     const res = await fetch(`${base}/whoami`, { headers })
@@ -55,10 +69,6 @@ describe('createService', () => {
     expect(res.status).toBe(404)
     expect(await res.json()).toEqual({ code: 'NOT_FOUND', message: 'Route not found' })
   })
-
-  const now = () => Math.floor(Date.now() / 1000)
-  const signed = (requestId = 'req-1') =>
-    contextHeaders({ userId: 'usr_1', role: 'rider', phoneVerified: true, requestId, timestamp: now() }, env.GATEWAY_CONTEXT_KEY)
 
   it('echoes the caller request id on /health', async () => {
     const res = await fetch(`${base}/health`, { headers: { 'x-request-id': 'trace-me-123' } })

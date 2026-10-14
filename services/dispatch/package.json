@@ -6,6 +6,8 @@
     "dev": "go run ./cmd/dispatch",
     "build": "go build -o bin/dispatch ./cmd/dispatch",
     "test": "go test ./...",
-    "typecheck": "go vet ./..."
+    "typecheck": "go vet ./...",
+    "lint": "go tool -modfile=tools/golangci-lint.mod golangci-lint run ./...",
+    "format": "go tool -modfile=tools/golangci-lint.mod golangci-lint fmt ./..."
   }
 }

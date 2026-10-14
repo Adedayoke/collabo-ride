@@ -32,9 +32,12 @@ describe('trip env', () => {
     expect(env).toMatchObject({ SERVICE_NAME: 'trip', PORT: 8082 })
   })
 
-  it.each(['DATABASE_URL', 'VALKEY_DURABLE_URL', 'OSRM_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])('exits at start and names %s when it is missing', async (name) => {
-    stub({ ...required, [name]: undefined })
-    await expect(import('./env')).rejects.toThrow('process.exit(1)')
-    expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))
-  })
+  it.each(['DATABASE_URL', 'VALKEY_DURABLE_URL', 'OSRM_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])(
+    'exits at start and names %s when it is missing',
+    async (name) => {
+      stub({ ...required, [name]: undefined })
+      await expect(import('./env')).rejects.toThrow('process.exit(1)')
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))
+    },
+  )
 })

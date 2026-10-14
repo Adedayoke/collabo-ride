@@ -10,9 +10,9 @@ info:
 servers:
   - url: /
 tags:
-  - { name: public, description: "Reached by the apps through the gateway under /v1/<service>" }
-  - { name: internal, description: "Service to service on the private network" }
-  - { name: admin, description: "Ops console routes, staff role only" }
+  - { name: public, description: 'Reached by the apps through the gateway under /v1/<service>' }
+  - { name: internal, description: 'Service to service on the private network' }
+  - { name: admin, description: 'Ops console routes, staff role only' }
   - { name: gateway }
   - { name: accounts }
   - { name: trip }

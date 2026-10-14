@@ -27,7 +27,7 @@ func Load() (Config, error) {
 	_ = godotenv.Load()
 	var c Config
 	if err := envconfig.Process("", &c); err != nil {
-		return c, err
+		return c, fmt.Errorf("read environment: %w", err)
 	}
 	if len(c.GatewayContextKey) < 32 {
 		return c, errors.New("GATEWAY_CONTEXT_KEY must be at least 32 characters")

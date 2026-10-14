@@ -35,7 +35,17 @@ describe('realtime env', () => {
     expect(env).toMatchObject({ SERVICE_NAME: 'realtime', PORT: 8086 })
   })
 
-  it.each(['VALKEY_LIVE_URL', 'VALKEY_DURABLE_URL', 'JWKS_URL', 'JWT_ISSUER', 'JWT_AUDIENCE', 'TRIP_URL', 'SERVICE_NAME', 'PORT', 'GATEWAY_CONTEXT_KEY'])('exits at start and names %s when it is missing', async (name) => {
+  it.each([
+    'VALKEY_LIVE_URL',
+    'VALKEY_DURABLE_URL',
+    'JWKS_URL',
+    'JWT_ISSUER',
+    'JWT_AUDIENCE',
+    'TRIP_URL',
+    'SERVICE_NAME',
+    'PORT',
+    'GATEWAY_CONTEXT_KEY',
+  ])('exits at start and names %s when it is missing', async (name) => {
     stub({ ...required, [name]: undefined })
     await expect(import('./env')).rejects.toThrow('process.exit(1)')
     expect(console.error).toHaveBeenCalledWith(expect.stringContaining(name))

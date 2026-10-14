@@ -51,8 +51,17 @@ def sign(ctx: RequestContext, key: str) -> str:
 def verify(headers: Mapping[str, str], key: str, now: int | None = None) -> RequestContext:
     """Check the context headers; `headers` must be case insensitive or lower case."""
     now = int(time.time()) if now is None else now
-    values = [headers.get(h) for h in (HEADER_USER_ID, HEADER_ROLE, HEADER_PHONE_VERIFIED,
-                                       HEADER_REQUEST_ID, HEADER_TIMESTAMP, HEADER_SIGNATURE)]
+    values = [
+        headers.get(h)
+        for h in (
+            HEADER_USER_ID,
+            HEADER_ROLE,
+            HEADER_PHONE_VERIFIED,
+            HEADER_REQUEST_ID,
+            HEADER_TIMESTAMP,
+            HEADER_SIGNATURE,
+        )
+    ]
     if not all(values):
         raise ContextError("missing context headers")
     uid, role, flag, request_id, ts, sig = values  # type: ignore[misc]
