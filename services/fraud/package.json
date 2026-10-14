@@ -1,0 +1,11 @@
+{
+  "name": "@collabo/fraud",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "uv run --frozen uvicorn app.main:app --reload --port 8087",
+    "build": "uv sync --frozen && uv run --frozen python -m compileall -q app",
+    "test": "uv run --frozen pytest -q",
+    "typecheck": "uv run --frozen python -m compileall -q app tests"
+  }
+}

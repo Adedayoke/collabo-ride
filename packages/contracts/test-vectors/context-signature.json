@@ -1,0 +1,100 @@
+{
+  "description": "Signed context vectors (spec 0009). sig = hex HMAC SHA256 of uid|role|phoneVerified|reqId|ts using key. Every implementation must reproduce each valid sig and reject each invalid case (use the case key when given, else the top level key). Skew rule: reject when |now - ts| > maxSkewSeconds.",
+  "key": "test-gateway-context-key-0123456789abcdef",
+  "maxSkewSeconds": 30,
+  "valid": [
+    {
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "rider",
+      "phoneVerified": true,
+      "reqId": "req-0001",
+      "ts": 1760400000,
+      "payload": "usr_01J9Z7Q8K3R4|rider|true|req-0001|1760400000",
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc29"
+    },
+    {
+      "uid": "usr_01J9Z7Q8K3R5",
+      "role": "driver",
+      "phoneVerified": false,
+      "reqId": "req-0002",
+      "ts": 1760400030,
+      "payload": "usr_01J9Z7Q8K3R5|driver|false|req-0002|1760400030",
+      "sig": "80623ba230095fc37b5a4e286b7a109c35b4ac293c6e36cfdc603b11a9b52f9d"
+    },
+    {
+      "uid": "usr_staff_7",
+      "role": "staff",
+      "phoneVerified": true,
+      "reqId": "6f1c2e9a-8b7d-4c3e-9f10-2a3b4c5d6e7f",
+      "ts": 1760401234,
+      "payload": "usr_staff_7|staff|true|6f1c2e9a-8b7d-4c3e-9f10-2a3b4c5d6e7f|1760401234",
+      "sig": "6340d96d5e2792675d5b1a9e5a539e49cc5ac883750993c9354984297ecb5ebe"
+    },
+    {
+      "uid": "system",
+      "role": "system",
+      "phoneVerified": false,
+      "reqId": "job:offer-expiry:42",
+      "ts": 1760409999,
+      "payload": "system|system|false|job:offer-expiry:42|1760409999",
+      "sig": "57ea6b645d0d79731bac8ffc1e50f275342936a6f188101039c4d8b443ce462c"
+    },
+    {
+      "uid": "usr_ünïcode_✓",
+      "role": "rider",
+      "phoneVerified": true,
+      "reqId": "req with spaces",
+      "ts": 1760400001,
+      "payload": "usr_ünïcode_✓|rider|true|req with spaces|1760400001",
+      "sig": "6704e895e2f985e02a562671c33a167ea37329dd481b6a7b6639baaf34ec9e75"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "wrong key",
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "rider",
+      "phoneVerified": true,
+      "reqId": "req-0001",
+      "ts": 1760400000,
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc29",
+      "key": "another-key-that-is-long-enough-000000"
+    },
+    {
+      "name": "role tampered",
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "staff",
+      "phoneVerified": true,
+      "reqId": "req-0001",
+      "ts": 1760400000,
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc29"
+    },
+    {
+      "name": "phone verified flipped",
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "rider",
+      "phoneVerified": false,
+      "reqId": "req-0001",
+      "ts": 1760400000,
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc29"
+    },
+    {
+      "name": "timestamp moved",
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "rider",
+      "phoneVerified": true,
+      "reqId": "req-0001",
+      "ts": 1760400001,
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc29"
+    },
+    {
+      "name": "signature truncated",
+      "uid": "usr_01J9Z7Q8K3R4",
+      "role": "rider",
+      "phoneVerified": true,
+      "reqId": "req-0001",
+      "ts": 1760400000,
+      "sig": "d69d50c3bfeffcf2f09fbfeb89ee17504bcea1b1ea51756dfde8b9b6cf9bbc"
+    }
+  ]
+}

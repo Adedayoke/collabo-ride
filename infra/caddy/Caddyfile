@@ -1,0 +1,19 @@
+# One origin for the API, the socket, and the ops console (spec 0009).
+# SITE_ADDRESS is ":80" locally; set it to a domain on the VPS and Caddy handles HTTPS.
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	handle /v1/* {
+		reverse_proxy gateway:8080
+	}
+
+	handle /socket.io/* {
+		reverse_proxy realtime:8086
+	}
+
+	handle {
+		root * /srv/console
+		try_files {path} /index.html
+		file_server
+	}
+}

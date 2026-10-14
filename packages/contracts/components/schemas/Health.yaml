@@ -1,0 +1,8 @@
+type: object
+required: [status, service]
+properties:
+  status:
+    type: string
+    enum: [ok]
+  service:
+    type: string

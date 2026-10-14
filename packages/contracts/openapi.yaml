@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: Collabo Ride API
+  version: 0.1.0
+  description: >
+    One contract for every service (spec 0009, Contract layout). Each operation
+    is tagged with its service and its audience: public, internal, or admin.
+    Public operations live under /v1/<service>; /internal/* and /admin/* live in
+    this same document. Service paths are written in paths/<service>.yaml.
+servers:
+  - url: /
+tags:
+  - { name: public, description: "Reached by the apps through the gateway under /v1/<service>" }
+  - { name: internal, description: "Service to service on the private network" }
+  - { name: admin, description: "Ops console routes, staff role only" }
+  - { name: gateway }
+  - { name: accounts }
+  - { name: trip }
+  - { name: dispatch }
+  - { name: payments }
+  - { name: notifications }
+  - { name: realtime }
+  - { name: fraud }
+security:
+  - bearerAuth: []
+paths:
+  # Add each service's operations in paths/<service>.yaml and reference them here.
+  /health:
+    $ref: './paths/common.yaml#/health'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token from the Better Auth JWT plugin (EdDSA, 10 minute lifetime).
+  schemas:
+    Error:
+      $ref: './components/schemas/Error.yaml'
+    Health:
+      $ref: './components/schemas/Health.yaml'

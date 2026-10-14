@@ -1,0 +1,4 @@
+{
+  "extends": "@collabo/config/tsconfig.node.json",
+  "include": ["src"]
+}
