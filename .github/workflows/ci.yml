@@ -33,7 +33,7 @@ jobs:
           cache-dependency-path: |
             services/dispatch/go.sum
             services/dispatch/tools/golangci-lint.sum
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           working-directory: services/fraud
           enable-cache: true
@@ -55,7 +55,7 @@ jobs:
         with:
           go-version-file: services/dispatch/go.mod
           cache-dependency-path: services/dispatch/go.sum
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           working-directory: services/fraud
           enable-cache: true
