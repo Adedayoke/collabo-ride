@@ -1,3 +1,4 @@
+// Command dispatch serves live driver locations and matching for Collabo Ride.
 package main
 
 import (
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -49,12 +51,21 @@ func main() {
 }
 
 func healthcheck() int {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8083"
+	port := 8083
+	if raw := os.Getenv("PORT"); raw != "" {
+		parsed, err := strconv.Atoi(raw)
+		if err != nil {
+			return 1
+		}
+		port = parsed
 	}
-	client := http.Client{Timeout: 2 * time.Second}
-	res, err := client.Get("http://localhost:" + port + "/health")
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("http://localhost:%d/health", port), nil) //nolint:gosec // fixed localhost host, integer port
+	if err != nil {
+		return 1
+	}
+	res, err := http.DefaultClient.Do(req) //nolint:gosec // same fixed localhost request
 	if err != nil {
 		return 1
 	}

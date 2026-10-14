@@ -3,6 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "files": [
-    "tsconfig.node.json"
-  ]
+    "tsconfig.node.json",
+    "oxlint.json",
+    "oxlint.react.json"
+  ],
+  "scripts": {
+    "lint": "oxfmt --check",
+    "format": "oxfmt"
+  }
 }

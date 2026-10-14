@@ -42,8 +42,9 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   // express.json() rejects bad bodies with a client status: 400 malformed,
   // 413 too large, 415 unsupported charset or encoding.
   const status = typeof err === 'object' && err !== null && 'status' in err ? err.status : undefined
-  if (typeof status === 'number' && status in BODY_ERRORS) {
-    res.status(status).json(BODY_ERRORS[status]!)
+  const body = typeof status === 'number' ? BODY_ERRORS[status] : undefined
+  if (typeof status === 'number' && body) {
+    res.status(status).json(body)
     return
   }
   console.error(err)

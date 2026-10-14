@@ -31,7 +31,11 @@ export function generate({ input, tsDir, goFile, goPackage, pyFile }) {
   mkdirSync(dirname(pyFile), { recursive: true })
 
   // Paths are passed relative to each cwd: the Windows shell splits arguments on spaces.
-  run('pnpm', ['exec', 'redocly', 'bundle', relative(contractsDir, input), '--output', relative(contractsDir, bundled)], contractsDir)
+  run(
+    'pnpm',
+    ['exec', 'redocly', 'bundle', relative(contractsDir, input), '--output', relative(contractsDir, bundled)],
+    contractsDir,
+  )
 
   writeFileSync(join(tsDir, 'orval.config.json'), JSON.stringify(orvalConfig(bundled, tsDir)))
   run('pnpm', ['exec', 'orval', '--config', relative(contractsDir, join(tsDir, 'orval.config.json'))], contractsDir)
@@ -41,25 +45,72 @@ export function generate({ input, tsDir, goFile, goPackage, pyFile }) {
   // generates from a copy converted to 3.0 (`nullable: true`, `const` to `enum`).
   // The 3.1 file stays the source of truth (smoke test 2 found this).
   const bundled30 = join(tsDir, 'openapi.bundled.3.0.yaml')
-  run('pnpm', ['exec', 'openapi-down-convert', '--input', relative(contractsDir, bundled),
-    '--output', relative(contractsDir, bundled30)], contractsDir)
+  run(
+    'pnpm',
+    [
+      'exec',
+      'openapi-down-convert',
+      '--input',
+      relative(contractsDir, bundled),
+      '--output',
+      relative(contractsDir, bundled30),
+    ],
+    contractsDir,
+  )
 
   const dispatchDir = join(repoRoot, 'services/dispatch')
-  run('go', ['tool', 'oapi-codegen', '-generate', 'types,client', '-package', goPackage,
-    '-o', relative(dispatchDir, goFile), relative(dispatchDir, bundled30)], dispatchDir)
+  run(
+    'go',
+    [
+      'tool',
+      'oapi-codegen',
+      '-generate',
+      'types,client',
+      '-package',
+      goPackage,
+      '-o',
+      relative(dispatchDir, goFile),
+      relative(dispatchDir, bundled30),
+    ],
+    dispatchDir,
+  )
 
   const fraudDir = join(repoRoot, 'services/fraud')
-  run('uv', ['run', '--frozen', 'datamodel-codegen', '--input', relative(fraudDir, bundled),
-    '--input-file-type', 'openapi', '--output-model-type', 'pydantic_v2.BaseModel',
-    '--target-python-version', '3.14', '--use-annotated', '--field-constraints',
-    '--disable-timestamp', '--output', relative(fraudDir, pyFile)], fraudDir)
+  run(
+    'uv',
+    [
+      'run',
+      '--frozen',
+      'datamodel-codegen',
+      '--input',
+      relative(fraudDir, bundled),
+      '--input-file-type',
+      'openapi',
+      '--output-model-type',
+      'pydantic_v2.BaseModel',
+      '--target-python-version',
+      '3.14',
+      '--use-annotated',
+      '--field-constraints',
+      '--disable-timestamp',
+      '--output',
+      relative(fraudDir, pyFile),
+    ],
+    fraudDir,
+  )
 }
 
 function orvalConfig(bundled, tsDir) {
   return {
     client: {
       input: { target: bundled },
-      output: { target: join(tsDir, 'client.ts'), client: 'react-query', httpClient: 'fetch', mode: 'single', clean: false },
+      output: {
+        target: join(tsDir, 'client.ts'),
+        client: 'react-query',
+        httpClient: 'fetch',
+        mode: 'single',
+        clean: false,
+      },
     },
     zod: {
       input: { target: bundled },

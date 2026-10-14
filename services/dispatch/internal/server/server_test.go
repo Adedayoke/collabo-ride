@@ -42,7 +42,7 @@ func freshContext() ctxsig.Context {
 
 func do(t *testing.T, method, path string, h http.Header) *httptest.ResponseRecorder {
 	t.Helper()
-	req := httptest.NewRequest(method, path, nil)
+	req := httptest.NewRequestWithContext(t.Context(), method, path, nil)
 	for k, v := range h {
 		req.Header[k] = v
 	}

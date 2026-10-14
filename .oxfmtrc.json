@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    "**/*.md",
+    "pnpm-lock.yaml",
+    "**/generated/**",
+    "**/*.gen.ts",
+    "**/expo-env.d.ts",
+    "infra/osrm/**",
+    "**/dist/**",
+    "**/bin/**",
+    "**/.expo/**",
+    "**/.turbo/**",
+    "**/.tanstack/**",
+    "**/.venv/**",
+    "**/node_modules/**"
+  ],
+  "sortPackageJson": false
+}

@@ -1,6 +1,7 @@
 import uuid
+from collections.abc import Awaitable, Callable
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -19,7 +20,7 @@ def error(status: int, code: str, message: str) -> JSONResponse:
 
 
 @app.middleware("http")
-async def request_context(request: Request, call_next):
+async def request_context(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
     request_id = request.headers.get(ctxsig.HEADER_REQUEST_ID)
     if not request_id or len(request_id) > 128:
         request_id = str(uuid.uuid4())

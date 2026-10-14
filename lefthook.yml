@@ -1,0 +1,35 @@
+# Pre commit: lint and format the staged files, then typecheck the workspaces they touch.
+# Installed by `pnpm install` (the root `prepare` script). Skip once with `LEFTHOOK=0 git commit`.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: ts lint
+      glob: '*.{js,mjs,cjs,jsx,ts,tsx}'
+      exclude:
+        - '**/generated/**'
+      run: pnpm exec oxlint --deny-warnings {staged_files}
+
+    - name: ts format
+      glob: '*.{js,mjs,cjs,jsx,ts,tsx,json,css,yaml,yml}'
+      exclude:
+        - '**/generated/**'
+        - 'pnpm-lock.yaml'
+      run: pnpm exec oxfmt --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+
+    - name: go
+      root: services/dispatch/
+      glob: '*.go'
+      run: go tool -modfile=tools/golangci-lint.mod golangci-lint fmt {staged_files} && go tool -modfile=tools/golangci-lint.mod golangci-lint run ./...
+      stage_fixed: true
+
+    - name: python
+      root: services/fraud/
+      glob: '*.py'
+      exclude:
+        - 'services/fraud/app/contract/**'
+      run: uv run --frozen ruff format {staged_files} && uv run --frozen ruff check --fix {staged_files}
+      stage_fixed: true
+
+    - name: typecheck
+      run: pnpm exec turbo run typecheck --filter=...[HEAD] --output-logs=errors-only
