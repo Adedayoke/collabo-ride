@@ -1,0 +1,236 @@
+# Collabo Ride local and VPS stack (spec 0009).
+#   --profile infra    Postgres + PostGIS, both Valkeys, MinIO. Services run natively (turbo dev).
+#   --profile full     infra plus every service and Caddy serving the console, built from source.
+#   --profile routing  OSRM, once the Nigeria extract is preprocessed (see infra/osrm/README.md).
+# From the repo root: pnpm infra:up / pnpm full:up
+
+name: collabo
+
+x-service: &service
+  profiles: [full]
+  restart: unless-stopped
+  depends_on:
+    postgres: { condition: service_healthy }
+    valkey-live: { condition: service_healthy }
+    valkey-durable: { condition: service_healthy }
+  healthcheck:
+    test: ["CMD", "node", "-e", "fetch('http://localhost:'+process.env.PORT+'/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+    interval: 10s
+    timeout: 3s
+    retries: 3
+    start_period: 10s
+
+x-common-env: &common-env
+  NODE_ENV: production
+  APP_ENV: production
+  LOG_LEVEL: info
+  GATEWAY_CONTEXT_KEY: ${GATEWAY_CONTEXT_KEY:?set GATEWAY_CONTEXT_KEY in infra/compose/.env}
+  VALKEY_LIVE_URL: redis://:${VALKEY_LIVE_PASSWORD}@valkey-live:6379
+  VALKEY_DURABLE_URL: redis://:${VALKEY_DURABLE_PASSWORD}@valkey-durable:6379
+
+services:
+  # ---------- infrastructure ----------
+  postgres:
+    image: postgis/postgis:18-3.6
+    profiles: [infra, full]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_SUPERUSER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?set POSTGRES_SUPERUSER_PASSWORD in infra/compose/.env}
+      POSTGRES_DB: ${POSTGRES_DB:-collabo}
+      # Read by postgres-init/01-bootstrap.sql through psql \getenv.
+      ACCOUNTS_DB_PASSWORD: ${ACCOUNTS_DB_PASSWORD:?}
+      TRIP_DB_PASSWORD: ${TRIP_DB_PASSWORD:?}
+      DISPATCH_DB_PASSWORD: ${DISPATCH_DB_PASSWORD:?}
+      PAYMENTS_DB_PASSWORD: ${PAYMENTS_DB_PASSWORD:?}
+      NOTIFICATIONS_DB_PASSWORD: ${NOTIFICATIONS_DB_PASSWORD:?}
+      FRAUD_DB_PASSWORD: ${FRAUD_DB_PASSWORD:?}
+    ports: ["5432:5432"]
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+
+  # Driver locations (GEO), rate limits, token denylist, Socket.IO adapter, auth sessions.
+  # Keys with a TTL may be evicted under memory pressure; the GEO set has none, so it stays.
+  valkey-live:
+    image: valkey/valkey:9.0
+    profiles: [infra, full]
+    restart: unless-stopped
+    command: >-
+      valkey-server --requirepass ${VALKEY_LIVE_PASSWORD:?set VALKEY_LIVE_PASSWORD in infra/compose/.env}
+      --maxmemory 256mb --maxmemory-policy volatile-lru --save "" --appendonly no
+    environment:
+      VALKEYCLI_AUTH: ${VALKEY_LIVE_PASSWORD}
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Streams and BullMQ. Never evicts; AOF fsync every second.
+  valkey-durable:
+    image: valkey/valkey:9.0
+    profiles: [infra, full]
+    restart: unless-stopped
+    command: >-
+      valkey-server --requirepass ${VALKEY_DURABLE_PASSWORD:?set VALKEY_DURABLE_PASSWORD in infra/compose/.env}
+      --maxmemory 512mb --maxmemory-policy noeviction --appendonly yes --appendfsync everysec
+    environment:
+      VALKEYCLI_AUTH: ${VALKEY_DURABLE_PASSWORD}
+    ports: ["6380:6379"]
+    volumes:
+      - valkey-durable-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # S3 compatible storage. MinIO no longer publishes free images on Docker Hub,
+  # so this is Chainguard's build of MinIO, pinned by digest (2026-10-13 build).
+  minio:
+    image: chainguard/minio@sha256:2136d593beacf4461187035eca949fe49abd589d5079735025c711ca58fee0c8
+    profiles: [infra, full]
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?}
+    ports: ["9000:9000", "9001:9001"]
+    volumes:
+      - minio-data:/data
+
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:v6.0.0
+    profiles: [routing]
+    restart: unless-stopped
+    command: ["osrm-routed", "--algorithm", "mld", "/data/nigeria-latest.osrm"]
+    ports: ["5000:5000"]
+    volumes:
+      - ../osrm/data:/data:ro
+
+  # ---------- services ----------
+  gateway:
+    <<: *service
+    build: { context: ../.., dockerfile: services/gateway/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: gateway
+      PORT: 8080
+      JWKS_URL: http://accounts:8081/api/auth/jwks
+      JWT_ISSUER: http://localhost:${HTTP_PORT:-8000}/v1/accounts
+      JWT_AUDIENCE: collabo-api
+      ACCOUNTS_URL: http://accounts:8081
+      TRIP_URL: http://trip:8082
+      DISPATCH_URL: http://dispatch:8083
+      PAYMENTS_URL: http://payments:8084
+      NOTIFICATIONS_URL: http://notifications:8085
+      FRAUD_URL: http://fraud:8087
+
+  accounts:
+    <<: *service
+    build: { context: ../.., dockerfile: services/accounts/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: accounts
+      PORT: 8081
+      DATABASE_URL: postgres://accounts:${ACCOUNTS_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+
+  trip:
+    <<: *service
+    build: { context: ../.., dockerfile: services/trip/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: trip
+      PORT: 8082
+      DATABASE_URL: postgres://trip:${TRIP_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+      OSRM_URL: http://osrm:5000
+
+  payments:
+    <<: *service
+    build: { context: ../.., dockerfile: services/payments/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: payments
+      PORT: 8084
+      DATABASE_URL: postgres://payments:${PAYMENTS_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+
+  notifications:
+    <<: *service
+    build: { context: ../.., dockerfile: services/notifications/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: notifications
+      PORT: 8085
+      DATABASE_URL: postgres://notifications:${NOTIFICATIONS_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+
+  realtime:
+    <<: *service
+    build: { context: ../.., dockerfile: services/realtime/Dockerfile }
+    environment:
+      <<: *common-env
+      SERVICE_NAME: realtime
+      PORT: 8086
+      JWKS_URL: http://accounts:8081/api/auth/jwks
+      JWT_ISSUER: http://localhost:${HTTP_PORT:-8000}/v1/accounts
+      JWT_AUDIENCE: collabo-api
+      TRIP_URL: http://trip:8082
+
+  dispatch:
+    <<: *service
+    build: { context: ../.., dockerfile: services/dispatch/Dockerfile }
+    healthcheck:
+      # Distroless image has no shell or curl: the binary checks its own health route.
+      test: ["CMD", "/dispatch", "healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      <<: *common-env
+      SERVICE_NAME: dispatch
+      PORT: 8083
+      DATABASE_URL: postgres://dispatch:${DISPATCH_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+      OSRM_URL: http://osrm:5000
+
+  fraud:
+    <<: *service
+    build: { context: ../.., dockerfile: services/fraud/Dockerfile }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os,urllib.request;urllib.request.urlopen('http://localhost:'+os.environ['PORT']+'/health',timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    environment:
+      <<: *common-env
+      SERVICE_NAME: fraud
+      PORT: 8087
+      DATABASE_URL: postgres://fraud:${FRAUD_DB_PASSWORD}@postgres:5432/${POSTGRES_DB:-collabo}
+
+  # One origin: /v1/* to gateway, /socket.io/* to realtime, everything else to the console.
+  caddy:
+    profiles: [full]
+    restart: unless-stopped
+    build: { context: ../.., dockerfile: infra/caddy/Dockerfile }
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    ports: ["${HTTP_PORT:-8000}:80", "443:443"]
+    volumes:
+      - caddy-data:/data
+    depends_on:
+      gateway: { condition: service_healthy }
+      realtime: { condition: service_healthy }
+
+volumes:
+  postgres-data:
+  valkey-durable-data:
+  minio-data:
+  caddy-data:

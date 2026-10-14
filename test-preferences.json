@@ -1,0 +1,9 @@
+{
+  "tool": "vitest",
+  "gate": null,
+  "additionalTools": ["go testing (stdlib)", "pytest"],
+  "e2eTool": "none",
+  "testDir": "beside the source (TS, Go); tests/ (Python)",
+  "filePattern": "*.test.ts, *_test.go, test_*.py",
+  "packageManager": "pnpm"
+}

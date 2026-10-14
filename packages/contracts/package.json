@@ -1,0 +1,28 @@
+{
+  "name": "@collabo/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./generated/ts/client.ts",
+    "./zod": "./generated/ts/zod.ts",
+    "./test-vectors/*": "./test-vectors/*"
+  },
+  "scripts": {
+    "gen": "node scripts/gen.mjs",
+    "typecheck": "tsc"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5"
+  },
+  "devDependencies": {
+    "@apiture/openapi-down-convert": "0.14.2",
+    "@collabo/config": "workspace:*",
+    "@redocly/cli": "2.63.0",
+    "@tanstack/react-query": "5.104.2",
+    "@types/node": "26.6.5",
+    "orval": "8.42.0",
+    "typescript": "~6.0.3",
+    "zod": "4.6.7"
+  }
+}

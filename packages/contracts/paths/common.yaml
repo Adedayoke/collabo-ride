@@ -1,0 +1,13 @@
+health:
+  get:
+    operationId: getHealth
+    summary: Liveness check. Every service serves this on its own port.
+    tags: [internal]
+    security: []
+    responses:
+      '200':
+        description: The service is up.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/Health.yaml'
