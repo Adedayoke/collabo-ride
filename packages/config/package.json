@@ -2,13 +2,26 @@
   "name": "@collabo/config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "files": [
     "tsconfig.node.json",
     "oxlint.json",
-    "oxlint.react.json"
+    "oxlint.react.json",
+    "oxlint.ui.json",
+    "lint/**"
   ],
   "scripts": {
-    "lint": "oxfmt --check",
-    "format": "oxfmt"
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint --deny-warnings lint && oxfmt --check",
+    "format": "oxlint --fix lint && oxfmt"
+  },
+  "dependencies": {
+    "eslint-plugin-i18next": "6.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "~6.0.3",
+    "vitest": "5.0.4"
   }
 }

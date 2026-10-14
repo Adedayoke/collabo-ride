@@ -1,0 +1,86 @@
+{
+  "action": {
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "done": "Done",
+    "save": "Save",
+    "next": "Next",
+    "accept": "Accept",
+    "decline": "Decline",
+    "dismiss": "Dismiss",
+    "resend": "Resend code",
+    "resendIn": "Resend code in {seconds, plural, one {# second} other {# seconds}}"
+  },
+  "state": {
+    "loading": "Loading",
+    "error": {
+      "title": "Something went wrong",
+      "body": "Please try again. If it keeps happening, contact support."
+    },
+    "offline": "You're offline. We'll reconnect as soon as you're back."
+  },
+  "money": {
+    "spoken": "{amount} naira",
+    "currencySymbol": "Naira",
+    "raiseBy": "Raise by {amount} naira",
+    "lowerBy": "Lower by {amount} naira",
+    "suggestedMinimum": "Suggested minimum {fare}",
+    "belowSuggested": "Drivers are less likely to accept an offer below {fare}."
+  },
+  "eta": {
+    "minutes": "{minutes, plural, one {# min} other {# min}}",
+    "arriving": "Arriving"
+  },
+  "rating": {
+    "value": "Rated {rating} out of 5",
+    "star": "{stars, plural, one {# star} other {# stars}}"
+  },
+  "field": {
+    "phone": "Phone number",
+    "phoneHint": "We'll text you a code to confirm it's you.",
+    "otp": "Verification code",
+    "otpHint": "Enter the 6 digit code we sent to {phone}.",
+    "price": "Your offer"
+  },
+  "colorMode": {
+    "title": "Appearance",
+    "system": "Match phone",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "title": "Language",
+    "en": "English",
+    "pcm": "Naijá",
+    "yo": "Yorùbá",
+    "ha": "Hausa",
+    "ig": "Igbo"
+  },
+  "status": {
+    "success": "Done",
+    "info": "Note",
+    "caution": "Warning",
+    "danger": "Problem"
+  },
+  "collabo": {
+    "badge": "Collabo"
+  },
+  "sos": {
+    "label": "Emergency SOS",
+    "hint": "Press and hold for one second to call for help."
+  },
+  "pin": {
+    "label": "Trip PIN {digits}"
+  },
+  "errors": {
+    "BAD_REQUEST": "Something about that request wasn't right. Please try again.",
+    "PAYLOAD_TOO_LARGE": "That file is too large. Please choose a smaller one.",
+    "UNSUPPORTED_MEDIA_TYPE": "That file type isn't supported.",
+    "INTERNAL": "Something went wrong on our side. Please try again.",
+    "NETWORK": "We couldn't reach Collabo Ride. Check your connection and try again.",
+    "UNKNOWN": "Something went wrong. Please try again."
+  }
+}

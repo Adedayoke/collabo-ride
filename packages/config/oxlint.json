@@ -25,7 +25,7 @@
     "typescript/no-explicit-any": "error",
     "typescript/no-non-null-assertion": "error"
   },
-  "ignorePatterns": ["dist/**", "generated/**", "**/*.gen.ts", "expo-env.d.ts"],
+  "ignorePatterns": ["dist/**", "generated/**", "**/*.gen.ts", "expo-env.d.ts", "lint/fixtures/**"],
   "overrides": [
     {
       "files": ["**/*.config.ts", "**/*.config.js", "**/*.config.mjs", "**/*.config.cjs"],

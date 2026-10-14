@@ -1,0 +1,28 @@
+{
+  "name": "@collabo/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tokens": "./tokens/index.ts",
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "scripts": {
+    "build": "node tokens/scripts/build-css.ts",
+    "ui:tokens": "node tokens/scripts/build-css.ts",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "format": "oxlint --fix && oxfmt",
+    "fonts:write": "node tokens/scripts/write-fonts.ts"
+  },
+  "devDependencies": {
+    "@collabo/config": "workspace:*",
+    "@types/fontkit": "2.0.9",
+    "@types/node": "26.6.5",
+    "fontkit": "2.0.4",
+    "typescript": "~6.0.3",
+    "vitest": "5.0.4",
+    "wawoff2": "2.0.1"
+  }
+}

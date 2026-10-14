@@ -38,7 +38,12 @@
       "cache": false
     },
     "lint": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxfmtrc.json", "$TURBO_ROOT$/packages/config/oxlint*.json"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxfmtrc.json",
+        "$TURBO_ROOT$/packages/config/oxlint*.json",
+        "$TURBO_ROOT$/packages/config/lint/**"
+      ]
     },
     "//#lint:root": {
       "inputs": ["$TURBO_DEFAULT$", "!apps/**", "!services/**", "!packages/**"]

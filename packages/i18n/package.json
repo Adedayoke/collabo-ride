@@ -1,0 +1,32 @@
+{
+  "name": "@collabo/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint --deny-warnings && oxfmt --check",
+    "format": "oxlint --fix && oxfmt"
+  },
+  "dependencies": {
+    "i18next": "26.4.5",
+    "i18next-icu": "2.5.0",
+    "intl-messageformat": "12.1.3",
+    "react-i18next": "17.0.16"
+  },
+  "peerDependencies": {
+    "react": "19.2.3"
+  },
+  "devDependencies": {
+    "@collabo/config": "workspace:*",
+    "@formatjs/icu-messageformat-parser": "3.5.21",
+    "@types/node": "26.6.5",
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3",
+    "vitest": "5.0.4"
+  }
+}

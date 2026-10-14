@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "Collabo Ride"
+  },
+  "home": {
+    "title": "Where to?",
+    "body": "Set your pickup and drop off, name your price, and pick the driver who suits you."
+  }
+}
