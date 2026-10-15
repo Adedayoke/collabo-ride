@@ -9,6 +9,16 @@ export const duration = {
   expressiveMax: 900,
   /** The fade every moment becomes under Reduce Motion. */
   reducedFade: 150,
+  /** Gap between items that appear one after another (driver found: avatar, then plate). */
+  stagger: 60,
+  /** The check mark draw in "trip complete" and "payout paid". */
+  checkDraw: 500,
+  /** How long `SosButton` must be held to confirm. */
+  sosHold: 1000,
+  /** The car marker glides between location updates over the gap between them. */
+  markerGlide: 4000,
+  /** One full cycle of the skeleton's loading pulse. */
+  skeletonPulse: 1200,
 } as const
 
 export const spring = {
@@ -21,3 +31,6 @@ export const easeOut = [0.2, 0, 0, 1] as const
 
 export type DurationToken = keyof typeof duration
 export type SpringToken = keyof typeof spring
+
+/** How far a floating, button like control shrinks while pressed. */
+export const pressScale = 0.97

@@ -9,6 +9,7 @@ import {
   fontFamilies,
   fontSetForLocale,
   maxFontScale,
+  opacity,
   radius,
   screenPadding,
   size,
@@ -43,6 +44,7 @@ export type Theme = {
   readonly duration: typeof duration
   readonly spring: typeof spring
   readonly maxFontScale: typeof maxFontScale
+  readonly opacity: typeof opacity
   readonly screenPadding: number
 }
 
@@ -78,6 +80,7 @@ export function buildTheme(mode: ColorMode, locale: string, textScale = 1): Them
     duration,
     spring,
     maxFontScale,
+    opacity,
     screenPadding,
   }
 }

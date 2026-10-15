@@ -1,7 +1,7 @@
-import type { LucideIcon } from 'lucide-react-native'
 import { ActivityIndicator, Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native'
 
 import type { ColorToken } from '../../tokens/index.ts'
+import type { IconComponent } from '../icons/index.tsx'
 import { useTheme } from '../theme/use-theme.ts'
 import type { ButtonSize, ButtonVariant } from './button-options.ts'
 import { Text } from './text.tsx'
@@ -25,7 +25,7 @@ export type ButtonProps = {
   readonly size?: ButtonSize
   readonly loading?: boolean
   readonly disabled?: boolean
-  readonly icon?: LucideIcon
+  readonly icon?: IconComponent
   readonly accessibilityHint?: string
   readonly testID?: string
   readonly style?: StyleProp<ViewStyle>
@@ -95,7 +95,7 @@ export function Button({
             <ActivityIndicator color={label} />
           ) : (
             <>
-              {Icon ? <Icon size={iconSize} color={label} strokeWidth={1.75} /> : null}
+              {Icon ? <Icon size={iconSize} color={label} strokeWidth={theme.size.iconStroke} /> : null}
               <Text variant="headline" style={[styles.label, { color: label }]} numberOfLines={2}>
                 {title}
               </Text>

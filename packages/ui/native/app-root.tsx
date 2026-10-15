@@ -6,9 +6,13 @@ import { ThemeProvider as NavigationThemeProvider } from 'expo-router'
 import { getLocales } from 'expo-localization'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState, type ReactNode } from 'react'
+import { StyleSheet } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
+import { ToastHost } from './components/toast.tsx'
+import { useReduceMotion } from './motion/use-reduce-motion.ts'
 import { useKitFonts } from './theme/fonts.ts'
-import { useNavigationTheme } from './theme/navigation.ts'
+import { useNavigationTheme } from './theme/navigation.tsx'
 import { usePreferences, usePreferencesHydrated } from './theme/preferences.ts'
 import { useTextScaleOverride } from './theme/text-scale.ts'
 import { ThemeProvider } from './theme/theme-provider.tsx'
@@ -31,6 +35,8 @@ export function AppRoot({ surface, devUi, userLocale = null, children }: AppRoot
   const preferencesReady = usePreferencesHydrated()
   const savedLocale = usePreferences((state) => state.locale)
   const textScale = useTextScaleOverride((state) => state.scale)
+  // Ask for Reduce Motion now, so the first expressive moment already knows the answer.
+  useReduceMotion()
 
   const locale: Locale = resolveLocale({
     userLocale,
@@ -52,10 +58,17 @@ export function AppRoot({ surface, devUi, userLocale = null, children }: AppRoot
 
   if (!ready) return null
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider locale={locale} textScale={textScale}>
-        <NavigationTheme>{children}</NavigationTheme>
-      </ThemeProvider>
-    </I18nextProvider>
+    <GestureHandlerRootView style={styles.fill}>
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider locale={locale} textScale={textScale}>
+          <NavigationTheme>{children}</NavigationTheme>
+          <ToastHost />
+        </ThemeProvider>
+      </I18nextProvider>
+    </GestureHandlerRootView>
   )
 }
+
+const styles = StyleSheet.create({
+  fill: { flex: 1 },
+})

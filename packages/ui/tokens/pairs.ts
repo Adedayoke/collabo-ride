@@ -43,4 +43,9 @@ export const pairs: readonly ContrastPair[] = [
   { fg: 'text', bg: 'dangerSoft', kind: 'text', use: 'banner body text' },
   { fg: 'text', bg: 'cautionSoft', kind: 'text', use: 'banner body text' },
   { fg: 'text', bg: 'infoSoft', kind: 'text', use: 'banner body text' },
+  { fg: 'textSecondary', bg: 'primarySoft', kind: 'text', use: 'detail text in selected rows and ride class cards' },
+  { fg: 'textSecondary', bg: 'collaboSoft', kind: 'text', use: 'detail text in a Collabo offer' },
+  { fg: 'primary', bg: 'collaboSoft', kind: 'nonText', use: 'rating star in a Collabo offer' },
+  { fg: 'onPrimary', bg: 'primary', kind: 'nonText', use: 'trip complete check, timeline checks' },
+  { fg: 'text', bg: 'surfaceSunken', kind: 'nonText', use: 'number plate badge border' },
 ]

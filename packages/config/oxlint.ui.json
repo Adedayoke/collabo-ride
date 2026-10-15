@@ -16,7 +16,7 @@
     "react/style-prop-object": [
       "error",
       {
-        "allow": ["StatusBar"]
+        "allow": ["StatusBar", "Path", "Circle", "Rect", "RoundedRect", "Line", "Paint"]
       }
     ]
   }

@@ -79,3 +79,8 @@ const dark: ColorPalette = {
 }
 
 export const color: Record<ColorMode, ColorPalette> = { light, dark }
+
+/** Opacity for pressed text links and small inline actions that have no background to tint. */
+export const opacity = {
+  pressed: 0.6,
+} as const

@@ -1,6 +1,6 @@
 // The one theme entry point: `@collabo/ui/tokens`. Every design value lives here.
 
-export { color, colorModes } from './color.ts'
+export { color, colorModes, opacity } from './color.ts'
 export type { ColorMode, ColorPalette, ColorToken } from './color.ts'
 export { contrastMinimum, contrastRatio, relativeLuminance } from './contrast.ts'
 export type { ContrastKind } from './contrast.ts'
@@ -8,7 +8,7 @@ export { elevation, hairlineWeb } from './elevation.ts'
 export type { ElevationToken } from './elevation.ts'
 export { fontFamilies, fontSetForLocale, localeFontSet } from './fonts.ts'
 export type { FontSet } from './fonts.ts'
-export { duration, easeOut, spring } from './motion.ts'
+export { duration, easeOut, pressScale, spring } from './motion.ts'
 export type { DurationToken, SpringToken } from './motion.ts'
 export { pairs } from './pairs.ts'
 export type { ContrastPair } from './pairs.ts'

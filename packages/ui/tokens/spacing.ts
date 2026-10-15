@@ -21,6 +21,8 @@ export const size = {
   touchTarget: 48,
   button: { sm: 40, md: 48, lg: 56 },
   icon: { sm: 16, md: 20, lg: 24, xl: 32 },
+  /** Lucide's stroke, used by every icon, custom ones included. */
+  iconStroke: 1.75,
   avatar: { xs: 24, sm: 32, md: 40, lg: 56, xl: 80 },
   /** Max content width on tablets (native) and in the console. */
   contentMaxWidth: { native: 640, console: 1280 },

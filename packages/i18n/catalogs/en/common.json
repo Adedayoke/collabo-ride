@@ -12,7 +12,9 @@
     "decline": "Decline",
     "dismiss": "Dismiss",
     "resend": "Resend code",
-    "resendIn": "Resend code in {seconds, plural, one {# second} other {# seconds}}"
+    "resendIn": "Resend code in {seconds, plural, one {# second} other {# seconds}}",
+    "allow": "Allow",
+    "notNow": "Not now"
   },
   "state": {
     "loading": "Loading",
@@ -20,7 +22,8 @@
       "title": "Something went wrong",
       "body": "Please try again. If it keeps happening, contact support."
     },
-    "offline": "You're offline. We'll reconnect as soon as you're back."
+    "offline": "You're offline. We'll reconnect as soon as you're back.",
+    "offlineTitle": "No connection"
   },
   "money": {
     "spoken": "{amount} naira",
@@ -28,7 +31,8 @@
     "raiseBy": "Raise by {amount} naira",
     "lowerBy": "Lower by {amount} naira",
     "suggestedMinimum": "Suggested minimum {fare}",
-    "belowSuggested": "Drivers are less likely to accept an offer below {fare}."
+    "belowSuggested": "Drivers are less likely to accept an offer below {fare}.",
+    "symbol": "₦"
   },
   "eta": {
     "minutes": "{minutes, plural, one {# min} other {# min}}",
@@ -36,14 +40,17 @@
   },
   "rating": {
     "value": "Rated {rating} out of 5",
-    "star": "{stars, plural, one {# star} other {# stars}}"
+    "star": "{stars, plural, one {# star} other {# stars}}",
+    "input": "Rate {stars, plural, one {# star} other {# stars}}"
   },
   "field": {
     "phone": "Phone number",
     "phoneHint": "We'll text you a code to confirm it's you.",
     "otp": "Verification code",
     "otpHint": "Enter the 6 digit code we sent to {phone}.",
-    "price": "Your offer"
+    "price": "Your offer",
+    "phonePrefix": "+234",
+    "phonePlaceholder": "803 123 4567"
   },
   "colorMode": {
     "title": "Appearance",
@@ -70,10 +77,13 @@
   },
   "sos": {
     "label": "Emergency SOS",
-    "hint": "Press and hold for one second to call for help."
+    "hint": "Press and hold for one second to call for help.",
+    "holding": "Keep holding"
   },
   "pin": {
-    "label": "Trip PIN {digits}"
+    "label": "Trip PIN {digits}",
+    "title": "Your trip PIN",
+    "hint": "Tell your driver this PIN when they arrive."
   },
   "errors": {
     "BAD_REQUEST": "Something about that request wasn't right. Please try again.",
@@ -82,5 +92,57 @@
     "INTERNAL": "Something went wrong on our side. Please try again.",
     "NETWORK": "We couldn't reach Collabo Ride. Check your connection and try again.",
     "UNKNOWN": "Something went wrong. Please try again."
+  },
+  "countdown": {
+    "secondsLeft": "{seconds, plural, one {# second left} other {# seconds left}}"
+  },
+  "timeline": {
+    "done": "{step}, done",
+    "current": "{step}, in progress",
+    "upcoming": "{step}, not yet"
+  },
+  "map": {
+    "recenter": "Centre on my location",
+    "layers": "Map layers",
+    "summary": "Map. {summary}"
+  },
+  "rideClass": {
+    "title": "Ride class",
+    "economy": "Economy",
+    "economyBody": "Everyday rides at the best price",
+    "comfort": "Comfort",
+    "comfortBody": "Newer cars with more legroom",
+    "luxury": "Luxury",
+    "luxuryBody": "Premium cars and top rated drivers",
+    "suggested": "Suggested {fare}"
+  },
+  "offer": {
+    "label": "{name}, rated {rating}, {car}, offers {fare}, {eta} away",
+    "eta": "{minutes, plural, one {# min away} other {# min away}}",
+    "arriving": "Arriving now"
+  },
+  "driver": {
+    "label": "{name}, rated {rating}, {car}, plate {plate}",
+    "trips": "{count, plural, one {# trip} other {# trips}}"
+  },
+  "permission": {
+    "location": {
+      "title": "Allow location",
+      "body": "Collabo Ride uses your location to find drivers near you and show your pickup on the map."
+    },
+    "notifications": {
+      "title": "Turn on notifications",
+      "body": "Get offers, driver arrival, and trip updates even when the app is closed."
+    }
+  },
+  "trip": {
+    "complete": "Trip complete",
+    "driverFound": "Your driver is on the way"
+  },
+  "sheet": {
+    "handle": "Sheet size",
+    "collapsed": "Minimised",
+    "half": "Half open",
+    "full": "Fully open"
   }
 }
