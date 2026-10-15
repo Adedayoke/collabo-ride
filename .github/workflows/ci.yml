@@ -69,3 +69,23 @@ jobs:
             echo "::error::Generated contract code is stale. Run 'pnpm contracts:gen' and commit the result."
             exit 1
           fi
+
+  dev-ui:
+    name: Dev catalog left out of production bundles
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo run build --filter=@collabo/console --filter=@collabo/rider --filter=@collabo/driver
+      - name: Fail when the /dev/ui catalog marker is in a production bundle
+        run: |
+          if grep -rla collabo-dev-ui-catalog apps/console/dist apps/rider/dist apps/driver/dist; then
+            echo "::error::The /dev/ui catalog is in a production bundle. Check EXPO_PUBLIC_DEV_UI and the import.meta.env.DEV guard."
+            exit 1
+          fi

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../packages/config/oxlint.ui.json"],
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "i18next/no-literal-string": "off",
+        "collabo/no-untranslated-call": "off"
+      }
+    },
+    {
+      "files": ["native/catalog/**", "web/catalog/**"],
+      "rules": {
+        "i18next/no-literal-string": "off",
+        "collabo/no-untranslated-call": "off"
+      }
+    },
+    {
+      "files": ["tokens/**", "map/**"],
+      "rules": {
+        "collabo/ui-drift": "off"
+      }
+    },
+    {
+      "files": ["web/**"],
+      "rules": {
+        "collabo/ui-drift": [
+          "error",
+          {
+            "web": true
+          }
+        ]
+      }
+    }
+  ]
+}

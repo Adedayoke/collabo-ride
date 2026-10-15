@@ -1,0 +1,15 @@
+{
+  "app": {
+    "name": "Collabo Ride ops"
+  },
+  "home": {
+    "title": "Operations",
+    "body": "Trips, drivers, payments, and safety reports will appear here as each area ships."
+  },
+  "theme": {
+    "toggle": "Colour theme"
+  },
+  "nav": {
+    "label": "Main"
+  }
+}

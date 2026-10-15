@@ -30,15 +30,33 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#FAFAF7",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 76,
+          "dark": {
+            "backgroundColor": "#0F1412"
+          }
         }
       ],
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "../../packages/ui/fonts/DMSans_400Regular.ttf",
+            "../../packages/ui/fonts/DMSans_500Medium.ttf",
+            "../../packages/ui/fonts/DMSans_600SemiBold.ttf",
+            "../../packages/ui/fonts/DMSans_700Bold.ttf",
+            "../../packages/ui/fonts/Inter_400Regular.ttf",
+            "../../packages/ui/fonts/Inter_500Medium.ttf",
+            "../../packages/ui/fonts/Inter_600SemiBold.ttf",
+            "../../packages/ui/fonts/Inter_700Bold.ttf"
+          ]
+        }
+      ],
       "expo-image",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,

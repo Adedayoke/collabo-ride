@@ -1,0 +1,22 @@
+/* Nothing here may be reported. */
+.card {
+  --progress: 40%;
+  color: var(--color-text);
+  background: var(--color-surface);
+  background-color: transparent;
+  border: var(--hairline) solid var(--color-border);
+  border-color: currentColor;
+  box-shadow: var(--shadow-card);
+  padding: 0 var(--space-xl);
+  margin: 0 auto;
+  margin-inline-start: calc(var(--space-sm) * -1);
+  gap: var(--space-sm);
+  inset: 0;
+  width: 50%;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  border-radius: var(--radius-md);
+  border-top-left-radius: 50%;
+  /* ui-drift-ok: the map attribution needs this exact inset */
+  bottom: 6px;
+}

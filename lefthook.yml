@@ -9,6 +9,12 @@ pre-commit:
         - '**/generated/**'
       run: pnpm exec oxlint --deny-warnings {staged_files}
 
+    - name: css drift
+      glob: '*.module.css'
+      exclude:
+        - 'packages/config/lint/fixtures/**'
+      run: node packages/config/lint/css-drift.ts {staged_files}
+
     - name: ts format
       glob: '*.{js,mjs,cjs,jsx,ts,tsx,json,css,yaml,yml}'
       exclude:
