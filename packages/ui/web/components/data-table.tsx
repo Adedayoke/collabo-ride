@@ -4,6 +4,7 @@
 import { useTranslation } from '@collabo/i18n'
 import { useTable, type RowData, type TableOptions } from '@tanstack/react-table'
 import { ArrowDown, ArrowUp, ArrowUpDown, Inbox } from 'lucide-react'
+import { useMemo } from 'react'
 
 import { size } from '../../tokens/index.ts'
 import { dataTableFeatures } from './data-table-features.ts'
@@ -38,14 +39,17 @@ export function DataTable<TData extends RowData>({
   emptyBody,
 }: DataTableProps<TData>) {
   const { t } = useTranslation()
+  // The table resets to the first page whenever the rows array changes identity, so copy only
+  // when `data` itself changes. A fresh copy each render would undo every page change.
+  const rows = useMemo(() => [...data], [data])
   const table = useTable({
     features: dataTableFeatures,
     columns,
-    data: [...data],
+    data: rows,
     initialState: { pagination: { pageIndex: 0, pageSize } },
   })
   const headerGroups = table.getHeaderGroups()
-  const rows = table.getRowModel().rows
+  const pageRows = table.getRowModel().rows
   const columnCount = Math.max(table.getAllLeafColumns().length, 1)
   const pageIndex = table.state.pagination.pageIndex
 
@@ -102,7 +106,7 @@ export function DataTable<TData extends RowData>({
                     ))}
                   </tr>
                 ))
-              : rows.map((row) => (
+              : pageRows.map((row) => (
                   <tr key={row.id} className={styles.row}>
                     {row.getAllCells().map((cell) => (
                       // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- the column's renderer supplies the cell text
