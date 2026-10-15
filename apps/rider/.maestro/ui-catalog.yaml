@@ -1,0 +1,79 @@
+# The rider /dev/ui catalog in light and dark, at 100% and 200% text, in en and en-XA
+# (AC-4, AC-5). Needs a development build with EXPO_PUBLIC_DEV_UI=true. Screenshots land in
+# the test output folder: review them for clipped or untranslated (unaccented in en-XA) text.
+#
+#   pnpm --filter @collabo/rider e2e:catalog
+appId: com.collaboride.rider
+name: rider UI catalog, every mode, locale, and text size
+---
+- launchApp:
+    clearState: true
+- openLink: collaborider://dev/ui
+- extendedWaitUntil:
+    visible:
+      id: collabo-dev-ui-catalog
+    timeout: 30000
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: light
+      LOCALE: en
+      SCALE: 1
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: light
+      LOCALE: en
+      SCALE: 2
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: light
+      LOCALE: en-XA
+      SCALE: 1
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: light
+      LOCALE: en-XA
+      SCALE: 2
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: dark
+      LOCALE: en
+      SCALE: 1
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: dark
+      LOCALE: en
+      SCALE: 2
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: dark
+      LOCALE: en-XA
+      SCALE: 1
+- runFlow:
+    file: ../../../packages/ui/maestro/catalog-pass.yaml
+    env:
+      APP_ID: com.collaboride.rider
+      SURFACE: rider
+      MODE: dark
+      LOCALE: en-XA
+      SCALE: 2

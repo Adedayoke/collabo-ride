@@ -1,0 +1,13 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}
+
+.status {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-subhead);
+  line-height: var(--line-height-subhead);
+  font-variant-numeric: tabular-nums;
+}

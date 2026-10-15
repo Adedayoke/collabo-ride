@@ -51,7 +51,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "lint": "oxlint --deny-warnings && oxfmt --check",
-    "format": "oxlint --fix && oxfmt"
+    "format": "oxlint --fix && oxfmt",
+    "e2e:catalog": "maestro test .maestro/ui-catalog.yaml --test-output-dir .maestro/output"
   },
   "private": true
 }

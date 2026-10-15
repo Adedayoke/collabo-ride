@@ -2,11 +2,13 @@
 // they use erasable syntax only: no enums, namespaces, or parameter properties.
 
 import { noUntranslatedCall } from './no-untranslated-call.ts'
+import { uiDrift } from './ui-drift.ts'
 
 const plugin = {
   meta: { name: 'collabo' },
   rules: {
     'no-untranslated-call': noUntranslatedCall,
+    'ui-drift': uiDrift,
   },
 }
 

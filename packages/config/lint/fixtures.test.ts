@@ -83,11 +83,24 @@ function findings(report: OxlintReport, file: string): Finding[] {
 
 const sorted = (values: Finding[]) => values.toSorted()
 
+const badFiles = ['bad.tsx', 'bad.web.tsx']
+const goodFiles = ['good.tsx', 'good.web.tsx']
+
+function expectExactFindings(report: OxlintReport): void {
+  for (const file of badFiles) expect(sorted(findings(report, file))).toEqual(sorted(expectedFindings(file)))
+  for (const file of goodFiles) expect(findings(report, file)).toEqual([])
+}
+
 beforeAll(() => {
   rmSync(runDir, { recursive: true, force: true })
   mkdirSync(runDir)
-  for (const file of ['bad.tsx', 'good.tsx']) cpSync(join(fixturesDir, file), join(runDir, file))
-  writeFileSync(join(runDir, '.oxlintrc.json'), JSON.stringify({ extends: ['../oxlint.ui.json'] }))
+  for (const file of [...badFiles, ...goodFiles]) cpSync(join(fixturesDir, file), join(runDir, file))
+  // The console turns on web mode the same way, through an override.
+  const config = {
+    extends: ['../oxlint.ui.json'],
+    overrides: [{ files: ['*.web.tsx'], rules: { 'collabo/ui-drift': ['error', { web: true }] } }],
+  }
+  writeFileSync(join(runDir, '.oxlintrc.json'), JSON.stringify(config))
 })
 
 afterAll(() => {
@@ -96,27 +109,17 @@ afterAll(() => {
 
 describe('collabo and i18next rules on the fixtures', () => {
   it('reports exactly the expected cases with an explicit config', () => {
-    const report = lint(configDir, [
-      '--config',
-      join(runDir, '.oxlintrc.json'),
-      join(runDir, 'bad.tsx'),
-      join(runDir, 'good.tsx'),
-    ])
-    expect(sorted(findings(report, 'bad.tsx'))).toEqual(sorted(expectedFindings('bad.tsx')))
-    expect(findings(report, 'good.tsx')).toEqual([])
+    const files = [...badFiles, ...goodFiles].map((file) => join(runDir, file))
+    expectExactFindings(lint(configDir, ['--config', join(runDir, '.oxlintrc.json'), ...files]))
   })
 
   it('reports the same from the repo root through the nested config chain, as lefthook runs it', () => {
-    const report = lint(repoRoot, [
-      relative(repoRoot, join(runDir, 'bad.tsx')),
-      relative(repoRoot, join(runDir, 'good.tsx')),
-    ])
-    expect(sorted(findings(report, 'bad.tsx'))).toEqual(sorted(expectedFindings('bad.tsx')))
-    expect(findings(report, 'good.tsx')).toEqual([])
+    const files = [...badFiles, ...goodFiles].map((file) => relative(repoRoot, join(runDir, file)))
+    expectExactFindings(lint(repoRoot, files))
   })
 
   it('finds at least one case per rule, so an empty run cannot pass', () => {
-    const rules = new Set(expectedFindings('bad.tsx').map((finding) => finding.split(':')[0]))
-    expect(rules).toEqual(new Set(['collabo/no-untranslated-call', 'i18next/no-literal-string']))
+    const rules = new Set(badFiles.flatMap(expectedFindings).map((finding) => finding.split(':')[0]))
+    expect(rules).toEqual(new Set(['collabo/no-untranslated-call', 'collabo/ui-drift', 'i18next/no-literal-string']))
   })
 })

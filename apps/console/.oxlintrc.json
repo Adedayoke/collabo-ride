@@ -1,6 +1,14 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "extends": ["../../packages/config/oxlint.ui.json"],
+  "rules": {
+    "collabo/ui-drift": [
+      "error",
+      {
+        "web": true
+      }
+    ]
+  },
   "overrides": [
     {
       "files": ["src/routes/**"],

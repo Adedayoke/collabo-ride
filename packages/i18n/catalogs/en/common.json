@@ -14,7 +14,8 @@
     "resend": "Resend code",
     "resendIn": "Resend code in {seconds, plural, one {# second} other {# seconds}}",
     "allow": "Allow",
-    "notNow": "Not now"
+    "notNow": "Not now",
+    "moreActions": "More actions"
   },
   "state": {
     "loading": "Loading",
@@ -50,7 +51,9 @@
     "otpHint": "Enter the 6 digit code we sent to {phone}.",
     "price": "Your offer",
     "phonePrefix": "+234",
-    "phonePlaceholder": "803 123 4567"
+    "phonePlaceholder": "803 123 4567",
+    "select": "Choose one",
+    "errorPrefix": "Error:"
   },
   "colorMode": {
     "title": "Appearance",
@@ -144,5 +147,28 @@
     "collapsed": "Minimised",
     "half": "Half open",
     "full": "Fully open"
+  },
+  "table": {
+    "empty": {
+      "title": "Nothing here yet",
+      "body": "Rows will show up here as soon as there are any."
+    },
+    "sortBy": "Sort by {column}",
+    "sortedAscending": "Sorted ascending",
+    "sortedDescending": "Sorted descending",
+    "rowCount": "{count, plural, one {# row} other {# rows}}"
+  },
+  "pagination": {
+    "label": "Pages",
+    "previous": "Previous page",
+    "next": "Next page",
+    "status": "Page {page} of {count}"
+  },
+  "shell": {
+    "skip": "Skip to main content",
+    "nav": "Main"
+  },
+  "toast": {
+    "region": "Notifications"
   }
 }

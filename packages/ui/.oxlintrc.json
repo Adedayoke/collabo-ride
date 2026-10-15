@@ -15,6 +15,23 @@
         "i18next/no-literal-string": "off",
         "collabo/no-untranslated-call": "off"
       }
+    },
+    {
+      "files": ["tokens/**", "map/**"],
+      "rules": {
+        "collabo/ui-drift": "off"
+      }
+    },
+    {
+      "files": ["web/**"],
+      "rules": {
+        "collabo/ui-drift": [
+          "error",
+          {
+            "web": true
+          }
+        ]
+      }
     }
   ]
 }

@@ -41,6 +41,7 @@
 
 .swatch {
   height: var(--size-touch-target);
+  background: var(--swatch);
   border: var(--hairline) solid var(--color-border);
   border-radius: var(--radius-sm);
 }
@@ -58,4 +59,17 @@
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+.typeSample {
+  margin: 0;
+  font-size: var(--sample-size);
+  line-height: var(--sample-line-height);
+  font-weight: var(--sample-weight);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-lg);
 }

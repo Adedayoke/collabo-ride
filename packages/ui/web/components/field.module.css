@@ -1,0 +1,72 @@
+/* Shared by TextField, Select, and Checkbox: label, hint, error, and the input box. */
+.field {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.label {
+  color: var(--color-text);
+  font-size: var(--font-size-subhead);
+  line-height: var(--line-height-subhead);
+  font-weight: var(--font-weight-subhead);
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-footnote);
+  line-height: var(--line-height-footnote);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  margin: 0;
+  color: var(--color-danger);
+  font-size: var(--font-size-footnote);
+  line-height: var(--line-height-footnote);
+}
+
+.control {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--size-touch-target);
+  padding: 0 var(--space-md);
+  border: var(--hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.control::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.control:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.control:disabled {
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
+}
+
+/* Read by screen readers, not drawn. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

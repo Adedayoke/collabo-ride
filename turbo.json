@@ -42,7 +42,8 @@
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/.oxfmtrc.json",
         "$TURBO_ROOT$/packages/config/oxlint*.json",
-        "$TURBO_ROOT$/packages/config/lint/**"
+        "$TURBO_ROOT$/packages/config/lint/**",
+        "$TURBO_ROOT$/packages/ui/tokens/**"
       ]
     },
     "//#lint:root": {

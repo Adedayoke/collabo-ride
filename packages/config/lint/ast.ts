@@ -5,6 +5,8 @@ export type AstNode = { readonly type: string; readonly range?: readonly [number
 
 export type Context = {
   readonly filename: string
+  /** The rule's options from the config, such as `[{ web: true }]`. */
+  readonly options?: readonly unknown[]
   readonly sourceCode: { readonly text: string; getCommentsBefore?: (node: AstNode) => readonly Comment[] }
   report(diagnostic: { node: AstNode; message: string }): void
 }
@@ -12,7 +14,12 @@ export type Context = {
 export type Comment = { readonly type: string; readonly value: string; readonly range?: readonly [number, number] }
 
 export type Rule = {
-  readonly meta: { readonly type: 'problem' | 'suggestion'; readonly docs: { readonly description: string } }
+  readonly meta: {
+    readonly type: 'problem' | 'suggestion'
+    readonly docs: { readonly description: string }
+    /** JSON Schema for the rule's options; oxlint refuses options on a rule without one. */
+    readonly schema?: readonly unknown[]
+  }
   create(context: Context): Record<string, (node: AstNode) => void>
 }
 

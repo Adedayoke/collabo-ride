@@ -1,0 +1,11 @@
+.tooltip {
+  z-index: var(--z-toast);
+  max-width: var(--size-dialog-max);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-size: var(--font-size-footnote);
+  line-height: var(--line-height-footnote);
+  box-shadow: var(--shadow-raised);
+}

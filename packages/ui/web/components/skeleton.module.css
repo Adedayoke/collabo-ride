@@ -1,0 +1,49 @@
+.group {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.skeleton {
+  display: block;
+  width: var(--skeleton-width, 100%);
+  background: var(--color-skeleton);
+  animation: pulse var(--duration-skeleton-pulse) ease-in-out infinite;
+}
+
+.line {
+  height: var(--line-height-body);
+  border-radius: var(--radius-sm);
+}
+
+.block {
+  height: var(--size-avatar-xl);
+  border-radius: var(--radius-md);
+}
+
+.circle {
+  width: var(--skeleton-width, var(--size-avatar-md));
+  height: var(--skeleton-width, var(--size-avatar-md));
+  border-radius: var(--radius-full);
+}
+
+@keyframes pulse {
+  50% {
+    background: var(--color-skeleton-highlight);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* Read by screen readers, not drawn. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

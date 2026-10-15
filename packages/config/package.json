@@ -14,10 +14,12 @@
     "test": "vitest run",
     "typecheck": "tsc",
     "lint": "oxlint --deny-warnings lint && oxfmt --check",
+    "lint:css": "node lint/css-drift.ts",
     "format": "oxlint --fix lint && oxfmt"
   },
   "dependencies": {
-    "eslint-plugin-i18next": "6.1.5"
+    "eslint-plugin-i18next": "6.1.5",
+    "postcss": "8.5.28"
   },
   "devDependencies": {
     "@types/node": "26.6.5",

@@ -13,6 +13,7 @@
       }
     ],
     "collabo/no-untranslated-call": "error",
+    "collabo/ui-drift": "error",
     "react/style-prop-object": [
       "error",
       {

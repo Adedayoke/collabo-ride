@@ -1,0 +1,30 @@
+/* Foreground on its soft background for each tone. Every pair is in `tokens/pairs.ts`. */
+.success {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.info {
+  color: var(--color-info);
+  background: var(--color-info-soft);
+}
+
+.caution {
+  color: var(--color-caution);
+  background: var(--color-caution-soft);
+}
+
+.danger {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.collabo {
+  color: var(--color-collabo-text);
+  background: var(--color-collabo-soft);
+}
+
+.neutral {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-sunken);
+}

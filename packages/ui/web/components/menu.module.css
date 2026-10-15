@@ -1,0 +1,70 @@
+/* Shared by Select and DropdownMenu: the floating list and its items. */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  cursor: pointer;
+  text-align: start;
+}
+
+.trigger[data-placeholder] {
+  color: var(--color-text-tertiary);
+}
+
+.content {
+  z-index: var(--z-dialog);
+  min-width: var(--radix-select-trigger-width, var(--size-avatar-xl));
+  max-height: var(--radix-select-content-available-height, none);
+  overflow: auto;
+  padding: var(--space-xs);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-raised);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: var(--size-touch-target);
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.item[data-highlighted] {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.item[data-disabled] {
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
+}
+
+.destructive {
+  color: var(--color-danger);
+}
+
+.destructive[data-highlighted] {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.indicator {
+  display: inline-flex;
+}
+
+.itemLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}

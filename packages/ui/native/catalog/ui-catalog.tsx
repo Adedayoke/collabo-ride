@@ -117,11 +117,14 @@ function Choice<T extends string | number>({
   value,
   onChange,
   label,
+  testIdPrefix,
 }: {
   readonly options: readonly T[]
   readonly value: T
   readonly onChange: (value: T) => void
   readonly label: (value: T) => string
+  /** Stable ids for the Maestro flows (`mode-dark`, `locale-en-XA`, `scale-2`), whatever the locale. */
+  readonly testIdPrefix: string
 }) {
   return (
     <Row>
@@ -132,6 +135,7 @@ function Choice<T extends string | number>({
           variant={option === value ? 'primary' : 'secondary'}
           title={label(option)}
           onPress={() => onChange(option)}
+          testID={`${testIdPrefix}-${option}`}
         />
       ))}
     </Row>
@@ -147,14 +151,21 @@ function Controls() {
   const setScale = useTextScaleOverride((state) => state.setScale)
   return (
     <Section title="Controls">
-      <Choice options={colorModeSettings} value={mode} onChange={setMode} label={(m) => t(`colorMode.${m}`)} />
+      <Choice
+        options={colorModeSettings}
+        value={mode}
+        onChange={setMode}
+        label={(m) => t(`colorMode.${m}`)}
+        testIdPrefix="mode"
+      />
       <Choice
         options={[sourceLocale, pseudoLocale]}
         value={savedLocale === pseudoLocale ? pseudoLocale : sourceLocale}
         onChange={setLocale}
         label={(locale) => locale}
+        testIdPrefix="locale"
       />
-      <Choice options={[1, 2]} value={scale} onChange={setScale} label={(s) => `${s * 100}%`} />
+      <Choice options={[1, 2]} value={scale} onChange={setScale} label={(s) => `${s * 100}%`} testIdPrefix="scale" />
     </Section>
   )
 }
@@ -601,6 +612,8 @@ export function UiCatalog() {
         <Moments />
         <Type />
         <Colors />
+        {/* The Maestro flows scroll until this is on screen. */}
+        <View testID={`${devUiMarker}-end`} />
       </View>
     </Screen>
   )
