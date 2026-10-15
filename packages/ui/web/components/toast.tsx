@@ -23,6 +23,9 @@ export function ToastHost() {
         <RadixToast.Root
           key={toast.id}
           className={styles.toast}
+          // Radix's default `foreground` type announces assertively. Toasts are status
+          // messages, so they announce politely, like the native Toast.
+          type="background"
           duration={toast.action ? toastDuration.withAction : toastDuration.default}
           onOpenChange={(open) => {
             if (!open) Toast.hide()
