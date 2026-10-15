@@ -1,6 +1,7 @@
 import { useTranslation } from '@collabo/i18n'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
+import { useRef } from 'react'
 
 import { Button } from './button.tsx'
 import styles from './dialog.module.css'
@@ -22,8 +23,9 @@ export type DialogProps = {
 }
 
 /**
- * A confirmation dialog (pickers and forms use pages or sheets). Radix traps focus, closes on
- * Escape, and returns focus to the control that opened it.
+ * A confirmation dialog (pickers and forms use pages or sheets). Radix traps focus and closes on
+ * Escape. Radix only returns focus to its own `Trigger`, and this dialog is controlled without
+ * one, so it remembers what had focus when it opened and returns focus there on close.
  */
 export function Dialog({
   open,
@@ -37,11 +39,22 @@ export function Dialog({
   loading = false,
 }: DialogProps) {
   const { t } = useTranslation()
+  const opener = useRef<HTMLElement | null>(null)
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className={styles.scrim} />
-        <RadixDialog.Content className={styles.dialog}>
+        <RadixDialog.Content
+          className={styles.dialog}
+          onOpenAutoFocus={() => {
+            opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault()
+            if (opener.current?.isConnected) opener.current.focus()
+            opener.current = null
+          }}
+        >
           <div className={styles.header}>
             <RadixDialog.Title className={styles.title}>{title}</RadixDialog.Title>
             <RadixDialog.Close asChild>

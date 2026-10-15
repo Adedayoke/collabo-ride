@@ -36,6 +36,8 @@
 
 .message {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--color-text);
   font-size: var(--font-size-callout);
   line-height: var(--line-height-callout);
