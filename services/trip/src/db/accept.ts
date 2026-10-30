@@ -5,7 +5,8 @@
 // race gets 409 request_not_open (or offer_stale), and the partial unique
 // indexes back this up if a code path ever skips the conditional update.
 import { randomInt } from 'node:crypto'
-import { type Actor, AppError, recordStatus, transition, writeOutbox } from '@collabo/service-kit'
+import { AppError } from '@collabo/service-kit'
+import { type Actor, recordStatus, transition, writeOutbox } from '@collabo/service-kit/db'
 import { and, eq, inArray, ne, sql } from 'drizzle-orm'
 import type { TripDb, TripTx } from './client'
 import { offerStale, requestNotOpen, withConflicts } from './conflicts'

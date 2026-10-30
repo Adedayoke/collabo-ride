@@ -2,7 +2,14 @@
 // Needs `pnpm infra:up` and `pnpm db:migrate`. Every test uses fresh ids.
 import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
-import { type Actor, pgErrorCode, pgErrorMessage, toPoint, transition, violatedUniqueIndex } from '@collabo/service-kit'
+import {
+  type Actor,
+  pgErrorCode,
+  pgErrorMessage,
+  toPoint,
+  transition,
+  violatedUniqueIndex,
+} from '@collabo/service-kit/db'
 import { eq, sql } from 'drizzle-orm'
 import { afterAll, describe, expect, it } from 'vitest'
 import { acceptRequest } from './accept'

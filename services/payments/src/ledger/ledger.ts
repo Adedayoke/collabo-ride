@@ -1,4 +1,5 @@
-import { AppError, type Executor, pgErrorMessage } from '@collabo/service-kit'
+import { AppError } from '@collabo/service-kit'
+import { type Executor, pgErrorMessage } from '@collabo/service-kit/db'
 import { sql } from 'drizzle-orm'
 
 /** Entry kinds (spec 0010.3); the database CHECK holds the same list. */

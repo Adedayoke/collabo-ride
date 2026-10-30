@@ -3,7 +3,7 @@
 // immutable by design, so every test uses fresh owners and keys.
 import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
-import { createPool, pgErrorMessage } from '@collabo/service-kit'
+import { createPool, pgErrorMessage } from '@collabo/service-kit/db'
 import { sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'

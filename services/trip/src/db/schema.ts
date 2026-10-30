@@ -1,7 +1,7 @@
 // The trip schema's core tables (spec 0010.2). Later tables arrive with the
 // features that first need them (spec 0010, Arrival map). Only src/db/ may
 // import trip_riders: every rider facing read goes through views.ts.
-import { geographyPoint } from '@collabo/service-kit'
+import { geographyPoint } from '@collabo/service-kit/db'
 import { sql } from 'drizzle-orm'
 import {
   bigint,

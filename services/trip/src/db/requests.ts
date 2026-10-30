@@ -1,4 +1,4 @@
-import { type Actor, type Point, recordStatus, writeOutbox } from '@collabo/service-kit'
+import { type Actor, type Point, recordStatus, writeOutbox } from '@collabo/service-kit/db'
 import type { TripDb } from './client'
 import { withConflicts } from './conflicts'
 import { requestOpened } from './events'

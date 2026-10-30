@@ -1,4 +1,5 @@
-import { AppError, violatedUniqueIndex } from '@collabo/service-kit'
+import { AppError } from '@collabo/service-kit'
+import { violatedUniqueIndex } from '@collabo/service-kit/db'
 
 /**
  * Exclusivity is enforced by partial unique indexes (spec 0010.2, Unique index

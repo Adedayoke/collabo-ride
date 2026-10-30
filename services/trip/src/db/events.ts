@@ -1,6 +1,6 @@
 // Outbox rows for trip changes (spec 0011, trip catalog). `data` is the full
 // public state after the change; no event ever carries a PIN.
-import type { OutboxEvent } from '@collabo/service-kit'
+import type { OutboxEvent } from '@collabo/service-kit/db'
 import type { offers, rideRequests, tripRiders, trips } from './schema'
 
 type Request = typeof rideRequests.$inferSelect

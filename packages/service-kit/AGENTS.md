@@ -20,17 +20,18 @@ pnpm --filter @collabo/service-kit lint
 
 | File | Owns |
 |---|---|
-| `src/index.ts` | Public exports |
+| `src/index.ts` | Public exports (no database code) |
 | `src/service.ts` | Builds a service app (middleware, health route) |
 | `src/env.ts` | Zod env validation helpers |
 | `src/context.ts` | Signed context (`x-ctx-sig`), matching the shared vectors |
 | `src/errors.ts` | The error shape every TS service returns |
-| `src/db/` | Pool, migration runner, `transition()` and `recordStatus()`, `writeOutbox()`, the `Point` value object and `geographyPoint` column, Postgres error readers |
+| `src/db/` | Exported as `@collabo/service-kit/db`: pool, migration runner, `transition()` and `recordStatus()`, `writeOutbox()`, the `Point` value object and `geographyPoint` column, Postgres error readers |
 
 ## Conventions
 
 - Every export is public API for six services: give it a doc comment and change it with care.
 - Context signing must stay byte for byte compatible with the Go and Python checks; run the shared vectors on every change.
 - Every status change goes through `transition()` on the caller's transaction, so the row, its `status_history` row, and its outbox rows commit together (spec 0010, AC-3).
+- Database helpers live only at `@collabo/service-kit/db`, so services that never touch Postgres (and env tests that reset modules) do not load `pg` and drizzle.
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._
