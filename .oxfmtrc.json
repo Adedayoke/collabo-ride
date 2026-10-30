@@ -17,7 +17,8 @@
     "**/.turbo/**",
     "**/.tanstack/**",
     "**/.venv/**",
-    "**/node_modules/**"
+    "**/node_modules/**",
+    "**/drizzle/meta/**"
   ],
   "sortPackageJson": false
 }
