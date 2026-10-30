@@ -19,6 +19,8 @@ pnpm --filter @collabo/notifications build      # tsup to dist/
 pnpm --filter @collabo/notifications test       # vitest
 pnpm --filter @collabo/notifications typecheck  # tsc
 pnpm --filter @collabo/notifications lint       # oxlint + oxfmt --check
+pnpm --filter @collabo/notifications db:migrate # apply drizzle/ migrations
+pnpm --filter @collabo/notifications db:generate # drizzle-kit generate from src/db/schema.ts
 ```
 
 ## Key files

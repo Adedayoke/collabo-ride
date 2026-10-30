@@ -25,6 +25,10 @@ pnpm lint                              # every linter and format check, plus the
 pnpm format                            # apply lint fixes and formatting everywhere
 pnpm contracts:gen                     # regenerate TS, Go, Python from the OpenAPI source
 pnpm full:up                           # every service in containers
+pnpm db:bootstrap                      # apply the rerunnable postgres-init scripts to a running volume
+pnpm db:migrate                        # every service's migrations, each under its own role
+pnpm db:check                          # schema convention check across all six schemas (DB_ADMIN_URL)
+pnpm db:guard                          # migrations may only add: no drops, renames, or type changes
 ```
 
 ## Specs
@@ -83,5 +87,6 @@ Chosen here, installed by `/develop tooling`: oxlint + oxfmt for every TS worksp
 - [packages/contracts/AGENTS.md](packages/contracts/AGENTS.md): OpenAPI source and codegen
 - [packages/service-kit/AGENTS.md](packages/service-kit/AGENTS.md): shared Express bootstrap
 - [packages/config/AGENTS.md](packages/config/AGENTS.md): shared tsconfig and lint config
+- [packages/db-tools/AGENTS.md](packages/db-tools/AGENTS.md): schema convention check, isolation test, migration guard
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

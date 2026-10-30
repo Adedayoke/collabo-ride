@@ -19,6 +19,7 @@ pnpm --filter @collabo/dispatch test       # go test ./...
 pnpm --filter @collabo/dispatch typecheck  # go vet ./...
 pnpm --filter @collabo/dispatch lint       # golangci-lint run (includes gofmt, goimports)
 pnpm --filter @collabo/dispatch format     # golangci-lint fmt
+pnpm --filter @collabo/dispatch db:migrate # goose up from migrations/ (DATABASE_URL)
 ```
 
 ## Key files
@@ -29,6 +30,7 @@ pnpm --filter @collabo/dispatch format     # golangci-lint fmt
 | `internal/config/` | envconfig settings, validated at boot |
 | `internal/ctxsig/` | Signed context check, tested against the shared vectors in `packages/contracts` |
 | `internal/server/` | HTTP server and routes |
+| `cmd/migrate/`, `migrations/` | goose runner and its embedded SQL migrations |
 
 ## Conventions
 

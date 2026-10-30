@@ -15,6 +15,7 @@ The single source of truth for every API: a hand written OpenAPI 3.1 document, p
 pnpm contracts:gen                          # regenerate TS, Go, and Python output
 pnpm --filter @collabo/contracts typecheck
 pnpm --filter @collabo/contracts lint
+pnpm --filter @collabo/contracts sql:baseline   # write sql/ into every service's baseline migration
 ```
 
 ## Conventions
@@ -22,6 +23,7 @@ pnpm --filter @collabo/contracts lint
 - Edit the YAML, then run `pnpm contracts:gen`. Never hand edit `generated/`, `services/dispatch/internal/contract`, or `services/fraud/app/contract`.
 - Tag every operation with its service and its audience (`public`, `internal`, `admin`). Public routes live under `/v1/<service>`.
 - CI fails when generated output drifts from the YAML.
+- `sql/` (outbox, processed_events, status_history, set_updated_at) is copied into all six baseline migrations, and CI fails when a copy drifts (`sql-baseline.mjs --check`). Baselines are already applied, so change these tables with a new migration in each service, never by editing `sql/`.
 
 ## Gotchas
 
