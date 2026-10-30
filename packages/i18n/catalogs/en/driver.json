@@ -1,0 +1,12 @@
+{
+  "app": {
+    "name": "Collabo Driver"
+  },
+  "home": {
+    "title": "Ready to drive?",
+    "body": "Go online to see ride requests near you and send your offers."
+  },
+  "dev": {
+    "catalog": "Open the component catalog"
+  }
+}

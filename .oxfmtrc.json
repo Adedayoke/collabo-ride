@@ -18,7 +18,8 @@
     "**/.tanstack/**",
     "**/.venv/**",
     "**/node_modules/**",
-    "**/drizzle/meta/**"
+    "**/drizzle/meta/**",
+    "packages/config/lint/fixtures/**"
   ],
   "sortPackageJson": false
 }

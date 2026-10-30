@@ -38,7 +38,13 @@
       "cache": false
     },
     "lint": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxfmtrc.json", "$TURBO_ROOT$/packages/config/oxlint*.json"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxfmtrc.json",
+        "$TURBO_ROOT$/packages/config/oxlint*.json",
+        "$TURBO_ROOT$/packages/config/lint/**",
+        "$TURBO_ROOT$/packages/ui/tokens/**"
+      ]
     },
     "//#lint:root": {
       "inputs": ["$TURBO_DEFAULT$", "!apps/**", "!services/**", "!packages/**"]
@@ -48,6 +54,11 @@
     },
     "//#format:root": {
       "cache": false
+    },
+    "@collabo/console#dev": {
+      "dependsOn": ["@collabo/ui#build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

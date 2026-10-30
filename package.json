@@ -26,7 +26,8 @@
     "full:up": "docker compose -f infra/compose/compose.yaml --env-file infra/compose/.env --profile full up -d --build --wait",
     "full:down": "docker compose -f infra/compose/compose.yaml --env-file infra/compose/.env --profile full down",
     "smoke:bullmq": "node scripts/smoke/bullmq.mjs",
-    "smoke:contracts": "node scripts/smoke/contracts-gen.mjs"
+    "smoke:contracts": "node scripts/smoke/contracts-gen.mjs",
+    "ui:tokens": "pnpm --filter @collabo/ui ui:tokens"
   },
   "devDependencies": {
     "bullmq": "6.3.15",

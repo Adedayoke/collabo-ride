@@ -46,3 +46,6 @@ example
 
 expo-env.d.ts
 # @end expo-cli
+
+# Maestro screenshots and reports
+.maestro/output/

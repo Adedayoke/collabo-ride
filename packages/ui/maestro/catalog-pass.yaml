@@ -1,0 +1,31 @@
+# One pass over the native /dev/ui catalog in one color mode, locale, and text scale (AC-4,
+# AC-5): set the switches by their stable ids, then screenshot every screenful down to the end
+# marker. The apps' `.maestro/ui-catalog.yaml` runs it for all eight combinations.
+#
+# env: APP_ID, SURFACE (rider | driver), MODE (light | dark), LOCALE (en | en-XA), SCALE (1 | 2)
+appId: ${APP_ID}
+---
+- scrollUntilVisible:
+    element:
+      id: mode-${MODE}
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: mode-${MODE}
+- tapOn:
+    id: locale-${LOCALE}
+- tapOn:
+    id: scale-${SCALE}
+- assertVisible:
+    id: collabo-dev-ui-catalog
+- evalScript: ${output.page = 0}
+- repeat:
+    while:
+      notVisible:
+        id: collabo-dev-ui-catalog-end
+    commands:
+      - evalScript: ${output.page = output.page + 1}
+      - takeScreenshot: catalog-${SURFACE}-${MODE}-${LOCALE}-${SCALE}x-${output.page}
+      - scroll
+- evalScript: ${output.page = output.page + 1}
+- takeScreenshot: catalog-${SURFACE}-${MODE}-${LOCALE}-${SCALE}x-${output.page}

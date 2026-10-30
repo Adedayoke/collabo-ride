@@ -1,0 +1,24 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["./oxlint.react.json"],
+  "jsPlugins": ["./lint/index.ts", "eslint-plugin-i18next"],
+  "rules": {
+    "i18next/no-literal-string": [
+      "error",
+      {
+        "mode": "jsx-only",
+        "jsx-attributes": {
+          "include": ["label", "title", "placeholder", "accessibilityLabel", "accessibilityHint", "aria-label", "alt"]
+        }
+      }
+    ],
+    "collabo/no-untranslated-call": "error",
+    "collabo/ui-drift": "error",
+    "react/style-prop-object": [
+      "error",
+      {
+        "allow": ["StatusBar", "Path", "Circle", "Rect", "RoundedRect", "Line", "Paint"]
+      }
+    ]
+  }
+}
