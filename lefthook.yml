@@ -37,5 +37,12 @@ pre-commit:
       run: uv run --frozen ruff format {staged_files} && uv run --frozen ruff check --fix {staged_files}
       stage_fixed: true
 
+    - name: migration guard
+      glob:
+        - 'services/*/drizzle/*.sql'
+        - 'services/dispatch/migrations/*.sql'
+        - 'services/fraud/alembic/versions/*.py'
+      run: pnpm exec tsx packages/db-tools/src/guard.ts {staged_files}
+
     - name: typecheck
       run: pnpm exec turbo run typecheck --filter=...[HEAD] --output-logs=errors-only

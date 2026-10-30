@@ -19,6 +19,8 @@ pnpm --filter @collabo/accounts build      # tsup to dist/
 pnpm --filter @collabo/accounts test       # vitest
 pnpm --filter @collabo/accounts typecheck  # tsc
 pnpm --filter @collabo/accounts lint       # oxlint + oxfmt --check
+pnpm --filter @collabo/accounts db:migrate # apply drizzle/ migrations
+pnpm --filter @collabo/accounts db:generate # drizzle-kit generate from src/db/schema.ts
 ```
 
 ## Key files

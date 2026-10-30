@@ -6,8 +6,9 @@
     "dev": "uv run --frozen uvicorn app.main:app --reload --port 8087",
     "build": "uv sync --frozen && uv run --frozen python -m compileall -q app",
     "test": "uv run --frozen pytest -q",
-    "typecheck": "uv run --frozen python -m compileall -q app tests",
+    "typecheck": "uv run --frozen python -m compileall -q app alembic tests",
     "lint": "uv run --frozen ruff check && uv run --frozen ruff format --check",
-    "format": "uv run --frozen ruff check --fix && uv run --frozen ruff format"
+    "format": "uv run --frozen ruff check --fix && uv run --frozen ruff format",
+    "db:migrate": "uv run --frozen alembic upgrade head"
   }
 }

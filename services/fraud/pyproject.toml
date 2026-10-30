@@ -3,7 +3,14 @@ name = "fraud"
 version = "0.1.0"
 description = "Collabo Ride fraud service: Collabo match scoring and fraud flags."
 requires-python = ">=3.14"
-dependencies = ["fastapi==0.143.0", "pydantic-settings==2.15.0", "uvicorn[standard]==0.54.0"]
+dependencies = [
+    "alembic==1.18.4",
+    "fastapi==0.143.0",
+    "psycopg[binary]==3.3.2",
+    "pydantic-settings==2.15.0",
+    "sqlalchemy==2.0.46",
+    "uvicorn[standard]==0.54.0",
+]
 
 [tool.uv]
 package = false

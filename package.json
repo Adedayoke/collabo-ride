@@ -17,6 +17,10 @@
     "format": "turbo run format format:root",
     "format:root": "oxlint --fix scripts && oxfmt scripts infra .github lefthook.yml package.json turbo.json .oxfmtrc.json .oxlintrc.json",
     "contracts:gen": "pnpm --filter @collabo/contracts gen",
+    "db:bootstrap": "node scripts/db-bootstrap.mjs",
+    "db:migrate": "turbo run db:migrate",
+    "db:check": "pnpm --filter @collabo/db-tools check",
+    "db:guard": "tsx packages/db-tools/src/guard.ts",
     "infra:up": "docker compose -f infra/compose/compose.yaml --env-file infra/compose/.env --profile infra up -d --wait",
     "infra:down": "docker compose -f infra/compose/compose.yaml --env-file infra/compose/.env --profile infra down",
     "full:up": "docker compose -f infra/compose/compose.yaml --env-file infra/compose/.env --profile full up -d --build --wait",
@@ -31,6 +35,7 @@
     "lefthook": "2.2.1",
     "oxfmt": "0.72.0",
     "oxlint": "1.87.0",
+    "tsx": "4.23.15",
     "turbo": "2.11.8"
   }
 }

@@ -12,7 +12,8 @@
     "gen": "node scripts/gen.mjs",
     "typecheck": "tsc",
     "lint": "oxlint --deny-warnings && oxfmt --check",
-    "format": "oxlint --fix && oxfmt"
+    "format": "oxlint --fix && oxfmt",
+    "sql:baseline": "node scripts/sql-baseline.mjs"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5"

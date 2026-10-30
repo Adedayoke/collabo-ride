@@ -8,6 +8,7 @@
     "test": "go test ./...",
     "typecheck": "go vet ./...",
     "lint": "go tool -modfile=tools/golangci-lint.mod golangci-lint run ./...",
-    "format": "go tool -modfile=tools/golangci-lint.mod golangci-lint fmt ./..."
+    "format": "go tool -modfile=tools/golangci-lint.mod golangci-lint fmt ./...",
+    "db:migrate": "go run ./cmd/migrate"
   }
 }

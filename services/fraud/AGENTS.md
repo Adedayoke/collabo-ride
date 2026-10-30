@@ -18,6 +18,7 @@ pnpm --filter @collabo/fraud test       # pytest
 pnpm --filter @collabo/fraud typecheck  # compileall today; no type checker is chosen yet
 pnpm --filter @collabo/fraud lint       # ruff check + ruff format --check
 pnpm --filter @collabo/fraud format     # ruff check --fix + ruff format
+pnpm --filter @collabo/fraud db:migrate # alembic upgrade head (DATABASE_URL)
 uv add <package>                        # add a dependency (run inside services/fraud)
 ```
 
@@ -28,6 +29,7 @@ uv add <package>                        # add a dependency (run inside services/
 | `app/main.py` | FastAPI app |
 | `app/config.py` | pydantic-settings env, validated at boot |
 | `app/ctxsig.py` | Signed context check, tested against the shared vectors |
+| `alembic/` | Alembic env and versions; migrations are additive only, so `downgrade()` raises |
 
 ## Conventions
 

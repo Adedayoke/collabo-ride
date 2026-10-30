@@ -20,8 +20,25 @@ jobs:
     name: Lint, typecheck, test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Integration tests run against a real Postgres + PostGIS (AGENTS.md testing gate).
+    services:
+      postgres:
+        image: postgis/postgis:18-3.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres-dev-password
+          POSTGRES_DB: collabo
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d collabo"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The migration guard compares this branch with main.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -38,6 +55,19 @@ jobs:
           working-directory: services/fraud
           enable-cache: true
       - run: pnpm install --frozen-lockfile
+      - name: Use the example env files (local development values)
+        run: |
+          cp infra/compose/.env.example infra/compose/.env
+          for f in services/*/.env.example packages/*/.env.example; do cp "$f" "${f%.example}"; done
+      - name: Bootstrap Postgres like postgres-init does on a fresh volume
+        run: |
+          set -a; . infra/compose/.env; set +a
+          for f in infra/compose/postgres-init/*.sql; do
+            PGPASSWORD=postgres-dev-password psql -h localhost -U postgres -d collabo -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - run: pnpm db:migrate
+      - run: pnpm db:check
+      - run: pnpm db:guard
       - run: pnpm turbo run lint lint:root typecheck test --continue
 
   contracts:
@@ -69,6 +99,8 @@ jobs:
             echo "::error::Generated contract code is stale. Run 'pnpm contracts:gen' and commit the result."
             exit 1
           fi
+      - name: Fail when a baseline migration differs from packages/contracts/sql
+        run: node packages/contracts/scripts/sql-baseline.mjs --check
 
   dev-ui:
     name: Dev catalog left out of production bundles
