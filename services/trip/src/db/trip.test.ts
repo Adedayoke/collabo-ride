@@ -2,14 +2,14 @@
 // Needs `pnpm infra:up` and `pnpm db:migrate`. Every test uses fresh ids.
 import { randomUUID } from 'node:crypto'
 import { existsSync } from 'node:fs'
-import { type Actor, pgErrorMessage, toPoint, transition, violatedUniqueIndex } from '@collabo/service-kit'
+import { type Actor, pgErrorCode, pgErrorMessage, toPoint, transition, violatedUniqueIndex } from '@collabo/service-kit'
 import { eq, sql } from 'drizzle-orm'
 import { afterAll, describe, expect, it } from 'vitest'
 import { acceptRequest } from './accept'
 import { createTripDb } from './client'
 import { openRequest } from './requests'
 import { offers, tripRiders, trips } from './schema'
-import { driverTripView, riderTripHistory, riderTripView } from './views'
+import { driverTripView, HISTORY_PAGE_SIZE, riderTripHistory, riderTripView } from './views'
 
 if (existsSync('.env')) process.loadEnvFile('.env')
 const url = process.env.DATABASE_URL
@@ -48,7 +48,7 @@ function open(riderId: string, priceKobo: bigint) {
   )
 }
 
-function accept(requestId: string, driverId: string, joinTripId?: string) {
+function accept(requestId: string, driverId: string, joinTripId?: string, by = actor('driver', driverId)) {
   return acceptRequest(
     db,
     {
@@ -60,7 +60,7 @@ function accept(requestId: string, driverId: string, joinTripId?: string) {
       riderSnapshot: riderCard('Ada'),
       joinTripId,
     },
-    actor('driver', driverId),
+    by,
   )
 }
 
@@ -124,6 +124,35 @@ describe('fare privacy (AC-4)', () => {
     expect(rides.map((r) => r.me.id)).toEqual([f.adaRow])
     expect(nextCursor).toBeNull()
     expect(json(rides)).not.toContain('120000')
+  })
+
+  it('pages a long rider history newest first, with no gaps or repeats', async () => {
+    const rider = randomUUID()
+    const rows: string[] = []
+    for (let i = 0; i <= HISTORY_PAGE_SIZE; i++) {
+      const { tripRiderId } = await accept((await open(rider, 100000n)).id, randomUUID())
+      // End the ride so the rider may take the next one.
+      await db
+        .update(tripRiders)
+        .set({ status: 'cancelled', cancelledAt: new Date() })
+        .where(eq(tripRiders.id, tripRiderId))
+      rows.push(tripRiderId)
+    }
+
+    const first = await riderTripHistory(db, rider)
+    expect(first.rides).toHaveLength(HISTORY_PAGE_SIZE)
+    expect(first.nextCursor).toBe(first.rides.at(-1)?.me.id)
+    const second = await riderTripHistory(db, rider, first.nextCursor ?? undefined)
+    expect(second.nextCursor).toBeNull()
+
+    const seen = [...first.rides, ...second.rides].map((r) => r.me.id)
+    expect(seen).toEqual(rows.toReversed())
+  })
+
+  it('never returns another rider rows, even given their cursor', async () => {
+    const f = await collaboFixture()
+    const { rides } = await riderTripHistory(db, f.ada, f.bolaRow)
+    expect(rides.map((r) => r.me.id)).toEqual([f.adaRow])
   })
 
   it('shows the driver every rider row and never a PIN', async () => {
@@ -203,6 +232,33 @@ describe('exclusivity (AC-5)', () => {
     expect(await failure(db.insert(offers).values(offer))).toBe('offers_one_live_per_driver')
   })
 
+  it('closes every other live offer on the request when one is accepted', async () => {
+    const request = await open(randomUUID(), 100000n)
+    const [rival] = await db
+      .insert(offers)
+      .values({
+        requestId: request.id,
+        driverId: randomUUID(),
+        vehicleId: randomUUID(),
+        kind: 'counter',
+        priceKobo: 130000n,
+        priceVersion: 1,
+        expiresAt: inTenMinutes(),
+        driverSnapshot: driverCard,
+      })
+      .returning()
+    if (!rival) throw new Error('fixture offer missing')
+
+    await accept(request.id, randomUUID())
+
+    const [after] = await db.select().from(offers).where(eq(offers.id, rival.id))
+    expect(after).toMatchObject({ status: 'closed', closeReason: 'rider_chose_other', version: 2 })
+    const events = await db.execute(
+      sql`SELECT type, subject_seq FROM trip.outbox WHERE payload ->> 'id' = ${rival.id} ORDER BY created_at`,
+    )
+    expect(events.rows).toEqual([{ type: 'trip.offer.updated', subject_seq: '2' }])
+  })
+
   it('answers offer_stale when the rider changed the price', async () => {
     const request = await open(randomUUID(), 100000n)
     await db.execute(sql`UPDATE trip.ride_requests SET price_version = 2 WHERE id = ${request.id}`)
@@ -210,7 +266,104 @@ describe('exclusivity (AC-5)', () => {
   })
 })
 
+describe('Collabo join', () => {
+  it('adds the second rider as join order 2 and moves the trip version', async () => {
+    const f = await collaboFixture()
+    const [trip] = await db.select().from(trips).where(eq(trips.id, f.tripId))
+    const [bola] = await db.select().from(tripRiders).where(eq(tripRiders.id, f.bolaRow))
+    expect(trip?.version).toBe(2)
+    expect(bola?.joinOrder).toBe(2)
+    const updates = await db.execute(
+      sql`SELECT subject_seq, payload -> 'rider_ids' AS rider_ids FROM trip.outbox
+          WHERE type = 'trip.trip.updated' AND payload ->> 'id' = ${f.tripId} ORDER BY subject_seq`,
+    )
+    expect(updates.rows).toEqual([
+      { subject_seq: '1', rider_ids: [f.ada] },
+      { subject_seq: '2', rider_ids: expect.arrayContaining([f.ada, f.bola]) },
+    ])
+  })
+
+  it('refuses to join another driver trip and leaves the request open', async () => {
+    const solo = await accept((await open(randomUUID(), 100000n)).id, randomUUID())
+    const request = await open(randomUUID(), 100000n)
+    expect(await failure(accept(request.id, randomUUID(), solo.tripId))).toBe('trip_not_joinable')
+    const [row] = await db
+      .execute<{ status: string }>(sql`SELECT status FROM trip.ride_requests WHERE id = ${request.id}`)
+      .then((r) => r.rows)
+    expect(row?.status).toBe('open')
+  })
+
+  it('refuses to join once a rider is on board', async () => {
+    const driverId = randomUUID()
+    const first = await accept((await open(randomUUID(), 100000n)).id, driverId)
+    await db
+      .update(tripRiders)
+      .set({ status: 'on_board', pickedUpAt: new Date() })
+      .where(eq(tripRiders.id, first.tripRiderId))
+    const request = await open(randomUUID(), 100000n)
+    expect(await failure(accept(request.id, driverId, first.tripId))).toBe('trip_not_joinable')
+  })
+})
+
 describe('status changes (AC-3)', () => {
+  it('gives new rows a version 7 uuid from the database', async () => {
+    const request = await open(randomUUID(), 100000n)
+    const result = await accept(request.id, randomUUID())
+    const v7 = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+    for (const id of [request.id, result.tripId, result.tripRiderId, result.offerId]) expect(id).toMatch(v7)
+  })
+
+  it('records the actor id, role, and request id that caused each change', async () => {
+    const riderId = randomUUID()
+    const driverId = randomUUID()
+    const byRider = actor('rider', riderId)
+    const request = await openRequest(
+      db,
+      {
+        riderId,
+        rideClass: 'economy',
+        pickup: { point: lagos, address: 'Broad Street, Lagos Island' },
+        dropoff: { point: ikeja, address: 'Allen Avenue, Ikeja' },
+        priceKobo: 100000n,
+        paymentMethod: 'cash',
+        expiresAt: inTenMinutes(),
+      },
+      byRider,
+    )
+    const byDriver = actor('driver', driverId)
+    await accept(request.id, driverId, undefined, byDriver)
+
+    const history = await db.execute(
+      sql`SELECT to_status, actor_id, actor_role, request_id FROM trip.status_history
+          WHERE subject_id = ${request.id} ORDER BY created_at`,
+    )
+    expect(history.rows).toEqual([
+      { to_status: 'open', actor_id: riderId, actor_role: 'rider', request_id: byRider.requestId },
+      { to_status: 'matched', actor_id: driverId, actor_role: 'driver', request_id: byDriver.requestId },
+    ])
+  })
+
+  it('rejects a status_history row with an unknown actor role', async () => {
+    const write = db.execute(sql`
+      INSERT INTO trip.status_history (subject_type, subject_id, to_status, actor_role, request_id)
+      VALUES ('trip', ${randomUUID()}, 'assigned', 'hacker', 'test')
+    `)
+    await expect(write).rejects.toSatisfy((err: unknown) => pgErrorCode(err) === '23514')
+  })
+
+  it('never puts a PIN in any event', async () => {
+    const f = await collaboFixture()
+    const pins = await db.select({ pin: tripRiders.pin }).from(tripRiders).where(eq(tripRiders.tripId, f.tripId))
+    const events = await db.execute<{ payload: unknown }>(
+      sql`SELECT payload FROM trip.outbox WHERE payload ->> 'trip_id' = ${f.tripId} OR payload ->> 'id' = ${f.tripId}`,
+    )
+    expect(events.rows.length).toBeGreaterThan(0)
+    for (const { payload } of events.rows) {
+      expect(JSON.stringify(payload)).not.toContain('"pin"')
+      for (const { pin } of pins) expect(JSON.stringify(payload)).not.toContain(`"${pin}"`)
+    }
+  })
+
   it('writes the row, its history, and its outbox row together', async () => {
     const request = await open(randomUUID(), 100000n)
     await accept(request.id, randomUUID())

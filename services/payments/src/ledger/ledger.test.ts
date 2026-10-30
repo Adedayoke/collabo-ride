@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs'
 import { createPool, pgErrorMessage } from '@collabo/service-kit'
 import { sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { balanceKobo, ensureLedgerAccount, postJournalEntry, systemAccountId } from './ledger'
 
 if (existsSync('.env')) process.loadEnvFile('.env')
@@ -170,6 +170,44 @@ describe('post_journal_entry', () => {
         }),
       ),
     ).rejects.toMatchObject({ code: 'insufficient_balance' })
+  })
+
+  it('lets a driver with no floor go below zero on a cash commission', async () => {
+    const driver = await ensureLedgerAccount(db, randomUUID(), 'driver')
+    const revenue = await systemAccountId(db, 'platform_revenue')
+    await db.transaction((tx) =>
+      postJournalEntry(tx, {
+        idempotencyKey: key('cash_commission'),
+        kind: 'cash_commission',
+        sourceType: 'trip_rider',
+        sourceId: randomUUID(),
+        lines: [
+          { accountId: driver, amountKobo: -12000n },
+          { accountId: revenue, amountKobo: 12000n },
+        ],
+      }),
+    )
+    expect(await balanceKobo(db, driver)).toBe(-12000n)
+  })
+
+  it('refuses a zero line before touching the database', async () => {
+    const execute = vi.fn()
+    await expect(
+      postJournalEntry(
+        { execute },
+        {
+          idempotencyKey: key('adjustment'),
+          kind: 'adjustment',
+          sourceType: 'adjustment',
+          sourceId: randomUUID(),
+          lines: [
+            { accountId: randomUUID(), amountKobo: 0n },
+            { accountId: randomUUID(), amountKobo: 0n },
+          ],
+        },
+      ),
+    ).rejects.toThrow('A ledger line cannot be zero')
+    expect(execute).not.toHaveBeenCalled()
   })
 
   it('returns the original entry for a replayed key and adds no lines', async () => {
